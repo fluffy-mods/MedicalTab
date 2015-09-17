@@ -4,8 +4,8 @@
   <MainTabDef>
     <defName>Fluffy_MedicalInfoMainTab</defName>
     <label>medical</label>
-    <description>Examine and decide on research projects.</description>
+    <description>Examine you colonists and prisoners health status, order operations and decide on medical care.</description>
     <windowClass>Fluffy.MainTabWindow_Medical</windowClass>
-    <order>95</order>
+    <order>15</order>
   </MainTabDef>
 </MainTabDefs>
