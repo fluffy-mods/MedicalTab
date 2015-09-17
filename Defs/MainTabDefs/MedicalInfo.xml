@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<MainTabDefs>
+
+  <MainTabDef>
+    <defName>Fluffy_MedicalInfoMainTab</defName>
+    <label>medical</label>
+    <description>Examine and decide on research projects.</description>
+    <windowClass>Fluffy.MainTabWindow_Medical</windowClass>
+    <order>95</order>
+  </MainTabDef>
+</MainTabDefs>
