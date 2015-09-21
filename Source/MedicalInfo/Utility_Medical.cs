@@ -51,25 +51,41 @@ namespace Fluffy
             }
         }
 
+        private static Queue<BodyPartRecord> missingBodyPartQueue = new Queue<BodyPartRecord>();
+
+        public static List<BodyPartRecord> NonMissingParts(Pawn p)
+        {
+            HediffSet diffSet = p.health.hediffSet;
+            List<BodyPartRecord> NonMissingParts = new List<BodyPartRecord>();
+            missingBodyPartQueue.Clear();
+            missingBodyPartQueue.Enqueue(p.def.race.body.corePart);
+            while (missingBodyPartQueue.Count != 0)
+            {
+                BodyPartRecord node = missingBodyPartQueue.Dequeue();
+                if (!diffSet.PartOrAnyAncestorHasDirectlyAddedParts(node))
+                {
+                    Hediff_MissingPart hediff_MissingPart = (from x in diffSet.GetHediffs<Hediff_MissingPart>()
+                                                             where x.Part == node
+                                                             select x).FirstOrDefault<Hediff_MissingPart>();
+                    if (hediff_MissingPart == null)
+                    {
+                        NonMissingParts.Add(node);
+                        for (int i = 0; i < node.parts.Count; i++)
+                        {
+                            missingBodyPartQueue.Enqueue(node.parts[i]);
+                        }
+                    }
+                }
+            }
+            return NonMissingParts;
+        }
+
         public static void DoHediffTooltip(Rect rect, Pawn p, PawnCapacityDef capDef)
         {
             StringBuilder tooltip = new StringBuilder();
             bool tip = false;
             try
             {
-                // easy bit, hediffs that have a direct effect
-                // diseases and such (cataract, sickness)
-                IEnumerable<Hediff> hediffs = p.health.hediffSet.GetHediffs<Hediff>().Where(h => h.Visible && h.CapMods != null);
-                foreach (Hediff diff in hediffs)
-                {
-                    if (diff.CapMods.Count > 0 && diff.CapMods.Any(cm => cm.capacity == capDef))
-                    {
-                        tip = true;
-                        tooltip.AppendLine((diff.Part == null ? "Whole body" : diff.Part.def.LabelCap) + ": " + diff.LabelCap);
-                    }
-                }
-
-                // hard bit, hediffs that do not directly list capacity changes.
                 // get parts that matter for this capDef
                 List<string> activityGroups = p.RaceProps.body.GetActivityGroups(capDef);
                 List<BodyPartRecord> relevantParts = new List<BodyPartRecord>();
@@ -79,20 +95,22 @@ namespace Fluffy
                 }
                 relevantParts.Distinct();
 
-                // missing parts, subset to relevant
-                IEnumerable<Hediff_MissingPart> missings = p.health.hediffSet.GetMissingPartsCommonAncestors().Where(h => relevantParts.Contains(h.Part));
-                foreach (Hediff_MissingPart missing in missings)
-                {
-                    tip = true;
-                    tooltip.AppendLine((missing.Part == null ? "Whole body" : missing.Part.def.LabelCap) + ": " + missing.LabelCap);
-                }
+                // the following is an incredible hacky way to show all diffs, but not child nodes of missing body parts
+                // if you care about good code, look away.
+                // remove missing parts
+                relevantParts.RemoveAll(bp => p.health.hediffSet.GetHediffs<Hediff_MissingPart>().Select(h => h.Part).Contains(bp));
 
-                // injuries, subset to relevant
-                IEnumerable<Hediff_Injury> injuries = p.health.hediffSet.GetHediffs<Hediff_Injury>().Where(h => relevantParts.Contains(h.Part));
-                foreach (Hediff_Injury injury in injuries)
+                // add common ancestors back in
+                relevantParts.AddRange(p.health.hediffSet.GetMissingPartsCommonAncestors().Select(h => h.Part));
+
+                // hediffs with a direct effect listed (CapMods), or affecting a relevant part.
+                IEnumerable<Hediff> hediffs = p.health.hediffSet.GetHediffs<Hediff>().Where(h => h.Visible &&
+                                                                                                 ((h.CapMods != null && h.CapMods.Count > 0 && h.CapMods.Any(cm => cm.capacity == capDef)) ||
+                                                                                                 relevantParts.Contains(h.Part)));
+                foreach (Hediff diff in hediffs)
                 {
                     tip = true;
-                    tooltip.AppendLine((injury.Part == null ? "Whole body" : injury.Part.def.LabelCap) + ": " + injury.LabelCap);
+                    tooltip.AppendLine((diff.Part == null ? "Whole body" : diff.Part.def.LabelCap) + ": " + diff.LabelCap);
                 }
             }
             catch (Exception)
@@ -125,7 +143,7 @@ namespace Fluffy
             Find.WindowStack.Add(new FloatMenu(list, true));
         }
 
-        public static void  recipeOptionsMaker(Pawn pawn)
+        public static void recipeOptionsMaker(Pawn pawn)
         {
             Thing thingForMedBills = pawn as Thing;
             List<FloatMenuOption> list = new List<FloatMenuOption>();
