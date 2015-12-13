@@ -119,7 +119,7 @@ namespace Fluffy
 
             // prisoner / colonist toggle
             var sourceButton = new Rect( 0f, 0f, 200f, 35f );
-            if ( Widgets.TextButton( sourceButton, Source.ToString( ) ) )
+            if ( Widgets.TextButton( sourceButton, ("FluffyMedical."+Source.ToString( )).Translate( ) ) )
             {
                 Source = Source == SourceOptions.Colonists ? SourceOptions.Prisoners : SourceOptions.Colonists;
                 IsDirty = true;
