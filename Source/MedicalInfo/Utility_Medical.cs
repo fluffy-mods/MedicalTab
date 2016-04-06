@@ -191,7 +191,7 @@ namespace Fluffy
                                     action = delegate
                                     {
                                         if (
-                                            !Find.ListerPawns.FreeColonists.Any( col => localRecipe.PawnSatisfiesSkillRequirements( col ) ) )
+                                            !Find.MapPawns.FreeColonists.Any( col => localRecipe.PawnSatisfiesSkillRequirements( col ) ) )
                                         {
                                             Bill.CreateNoPawnsWithSkillDialog( localRecipe );
                                         }

@@ -59,10 +59,10 @@ namespace Fluffy
             switch ( Source )
             {
                 case SourceOptions.Prisoners:
-                    tempPawns = Find.ListerPawns.PrisonersOfColony;
+                    tempPawns = Find.MapPawns.PrisonersOfColony;
                     break;
                 default:
-                    tempPawns = Find.ListerPawns.FreeColonists;
+                    tempPawns = Find.MapPawns.FreeColonists;
                     break;
             }
 
