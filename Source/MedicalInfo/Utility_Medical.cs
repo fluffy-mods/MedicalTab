@@ -9,6 +9,7 @@ using Verse.Sound;
 
 namespace Fluffy
 {
+    [StaticConstructorOnStartup]
     public static class Utility_Medical
     {
         public static Texture2D[] CareTextures =
@@ -28,15 +29,15 @@ namespace Fluffy
 
         public static void MedicalCareSetter( Rect rect, ref MedicalCareCategory medCare )
         {
-            float iconSize = rect.width / 5f;
-            float iconHeightOffset = ( rect.height - iconSize ) / 2;
-            Rect rect2 = new Rect( rect.x, rect.y + iconHeightOffset, iconSize, iconSize );
-            for ( int i = 0; i < 5; i++ )
+            var iconSize = rect.width / 5f;
+            var iconHeightOffset = ( rect.height - iconSize ) / 2;
+            var rect2 = new Rect( rect.x, rect.y + iconHeightOffset, iconSize, iconSize );
+            for ( var i = 0; i < 5; i++ )
             {
-                MedicalCareCategory mc = (MedicalCareCategory) i;
+                var mc = (MedicalCareCategory) i;
                 Widgets.DrawHighlightIfMouseover( rect2 );
                 GUI.DrawTexture( rect2, CareTextures[i] );
-                if ( Widgets.InvisibleButton( rect2 ) )
+                if ( Widgets.ButtonInvisible( rect2 ) )
                 {
                     medCare = mc;
                     SoundDefOf.TickHigh.PlayOneShotOnCamera( );
@@ -52,22 +53,22 @@ namespace Fluffy
 
         public static List<BodyPartRecord> NonMissingParts( Pawn p )
         {
-            HediffSet diffSet = p.health.hediffSet;
-            List<BodyPartRecord> nonMissingParts = new List<BodyPartRecord>( );
+            var diffSet = p.health.hediffSet;
+            var nonMissingParts = new List<BodyPartRecord>( );
             MissingBodyPartQueue.Clear( );
             MissingBodyPartQueue.Enqueue( p.def.race.body.corePart );
             while ( MissingBodyPartQueue.Count != 0 )
             {
-                BodyPartRecord node = MissingBodyPartQueue.Dequeue( );
+                var node = MissingBodyPartQueue.Dequeue( );
                 if ( !diffSet.PartOrAnyAncestorHasDirectlyAddedParts( node ) )
                 {
-                    Hediff_MissingPart hediffMissingPart = ( from x in diffSet.GetHediffs<Hediff_MissingPart>( )
+                    var hediffMissingPart = ( from x in diffSet.GetHediffs<Hediff_MissingPart>( )
                                                where x.Part == node
                                                select x ).FirstOrDefault( );
                     if ( hediffMissingPart == null )
                     {
                         nonMissingParts.Add( node );
-                        foreach ( BodyPartRecord t in node.parts ) {
+                        foreach ( var t in node.parts ) {
                             MissingBodyPartQueue.Enqueue( t );
                         }
                     }
@@ -78,14 +79,14 @@ namespace Fluffy
 
         public static void DoHediffTooltip( Rect rect, Pawn p, PawnCapacityDef capDef )
         {
-            StringBuilder tooltip = new StringBuilder( );
-            bool tip = false;
+            var tooltip = new StringBuilder( );
+            var tip = false;
             try
             {
                 // get parts that matter for this capDef
-                List<string> activityGroups = p.RaceProps.body.GetActivityGroups( capDef );
-                List<BodyPartRecord> relevantParts = new List<BodyPartRecord>( );
-                foreach ( string t in activityGroups ) {
+                var activityGroups = p.RaceProps.body.GetActivityGroups( capDef );
+                var relevantParts = new List<BodyPartRecord>( );
+                foreach ( var t in activityGroups ) {
                     relevantParts.AddRange( p.RaceProps.body.GetParts( capDef, t ) );
                 }
                 relevantParts = relevantParts.Distinct().ToList();
@@ -100,13 +101,13 @@ namespace Fluffy
                 relevantParts.AddRange( p.health.hediffSet.GetMissingPartsCommonAncestors( ).Select( h => h.Part ) );
 
                 // hediffs with a direct effect listed (CapMods), or affecting a relevant part.
-                IEnumerable<Hediff> hediffs = p.health.hediffSet.GetHediffs<Hediff>( ).Where( h => h.Visible &&
+                var hediffs = p.health.hediffSet.GetHediffs<Hediff>( ).Where( h => h.Visible &&
                                                                                    ( ( h.CapMods != null &&
                                                                                        h.CapMods.Count > 0 &&
                                                                                        h.CapMods.Any(
                                                                                            cm => cm.capacity == capDef ) ) ||
                                                                                      relevantParts.Contains( h.Part ) ) );
-                foreach ( Hediff diff in hediffs )
+                foreach ( var diff in hediffs )
                 {
                     tip = true;
                     tooltip.AppendLine( ( diff.Part == null ? "Whole body" : diff.Part.def.LabelCap ) + ": " +
@@ -128,13 +129,13 @@ namespace Fluffy
 
         public static void MedicalCareSetterAll( List<Pawn> pawns )
         {
-            List<FloatMenuOption> list = new List<FloatMenuOption>( );
-            for ( int i = 0; i < 5; i++ )
+            var list = new List<FloatMenuOption>( );
+            for ( var i = 0; i < 5; i++ )
             {
-                MedicalCareCategory mc = (MedicalCareCategory) i;
-                FloatMenuOption option = new FloatMenuOption( mc.GetLabel( ), delegate
+                var mc = (MedicalCareCategory) i;
+                var option = new FloatMenuOption( mc.GetLabel( ), delegate
                 {
-                    foreach ( Pawn t in pawns ) {
+                    foreach ( var t in pawns ) {
                         t.playerSettings.medCare = mc;
                     }
                     SoundDefOf.TickHigh.PlayOneShotOnCamera( );
@@ -142,87 +143,89 @@ namespace Fluffy
                 } );
                 list.Add( option );
             }
-            Find.WindowStack.Add( new FloatMenu( list, true ) );
+            Find.WindowStack.Add( new FloatMenu( list ) );
         }
 
         public static void RecipeOptionsMaker( Pawn pawn )
         {
-            Thing thingForMedBills = pawn;
-            List<FloatMenuOption> list = new List<FloatMenuOption>( );
-            foreach ( RecipeDef current in thingForMedBills.def.AllRecipes )
+            if (pawn.RaceProps.Animal)
             {
-                if ( current.AvailableNow )
+                // TODO: See if we can auto-detect ADS, and/or auto-detect available bills on animals.
+                Log.Warning( "Medical bills are currently not supported on animals. Stay tuned!");
+                return;
+            }
+
+            Thing thingForMedBills = pawn;
+            var list = new List<FloatMenuOption>( );
+            foreach ( var current in thingForMedBills.def.AllRecipes )
+            {
+                if (!current.AvailableNow) continue;
+                IEnumerable<ThingDef> enumerable = current.PotentiallyMissingIngredients( null );
+                IEnumerable<ThingDef> thingDefs = enumerable as ThingDef[] ?? enumerable.ToArray( );
+                if (thingDefs.Any(x => x.isBodyPartOrImplant)) continue;
                 {
-                    IEnumerable<ThingDef> enumerable = current.PotentiallyMissingIngredients( null );
-                    IEnumerable<ThingDef> thingDefs = enumerable as ThingDef[] ?? enumerable.ToArray( );
-                    if ( !thingDefs.Any( x => x.isBodyPartOrImplant ) )
+                    IEnumerable<BodyPartRecord> partsToApplyOn = current.Worker.GetPartsToApplyOn( pawn, current );
+                    IEnumerable<BodyPartRecord> bodyPartRecords = partsToApplyOn as BodyPartRecord[] ?? partsToApplyOn.ToArray( );
+                    if (!bodyPartRecords.Any()) continue;
+                    foreach ( var current2 in bodyPartRecords )
                     {
-                        IEnumerable<BodyPartRecord> partsToApplyOn = current.Worker.GetPartsToApplyOn( pawn, current );
-                        IEnumerable<BodyPartRecord> bodyPartRecords = partsToApplyOn as BodyPartRecord[] ?? partsToApplyOn.ToArray( );
-                        if ( bodyPartRecords.Any( ) )
+                        var localRecipe = current;
+                        var localPart = current2;
+                        var text = localRecipe == RecipeDefOf.RemoveBodyPart ? HealthCardUtility.RemoveBodyPartSpecialLabel( pawn, current2 ) : localRecipe.LabelCap;
+                        if ( !current.hideBodyPartNames )
                         {
-                            foreach ( BodyPartRecord current2 in bodyPartRecords )
-                            {
-                                RecipeDef localRecipe = current;
-                                BodyPartRecord localPart = current2;
-                                string text = localRecipe == RecipeDefOf.RemoveBodyPart ? HealthCardUtility.RemoveBodyPartSpecialLabel( pawn, current2 ) : localRecipe.LabelCap;
-                                if ( !current.hideBodyPartNames )
-                                {
-                                    text = text + " (" + current2.def.label + ")";
-                                }
-                                Action action = null;
-                                if ( thingDefs.Any( ) )
-                                {
-                                    text += " (";
-                                    bool flag = true;
-                                    foreach ( ThingDef current3 in thingDefs )
-                                    {
-                                        if ( !flag )
-                                        {
-                                            text += ", ";
-                                        }
-                                        flag = false;
-                                        text += "MissingMedicalBillIngredient".Translate( current3.label );
-                                    }
-                                    text += ")";
-                                }
-                                else
-                                {
-                                    action = delegate
-                                    {
-                                        if (
-                                            !Find.MapPawns.FreeColonists.Any( col => localRecipe.PawnSatisfiesSkillRequirements( col ) ) )
-                                        {
-                                            Bill.CreateNoPawnsWithSkillDialog( localRecipe );
-                                        }
-                                        Pawn pawn2 = thingForMedBills as Pawn;
-                                        if ( pawn2 != null && !pawn.InBed( ) && pawn.RaceProps.Humanlike )
-                                        {
-                                            if (
-                                                !Find.ListerBuildings.allBuildingsColonist.Any( x => x is Building_Bed && ( (Building_Bed) x ).Medical ) )
-                                            {
-                                                Messages.Message( "MessageNoMedicalBeds".Translate( ),
-                                                                  MessageSound.Negative );
-                                            }
-                                        }
-                                        Bill_Medical billMedical = new Bill_Medical( localRecipe );
-                                        if ( pawn2 != null ) {
-                                            pawn2.BillStack.AddBill( billMedical );
-                                            billMedical.Part = localPart;
-                                            if ( pawn2.Faction != null && !pawn2.Faction.def.hidden &&
-                                                 !pawn2.Faction.HostileTo( Faction.OfColony ) &&
-                                                 localRecipe.Worker.IsViolationOnPawn( pawn2, localPart, Faction.OfColony ) )
-                                            {
-                                                Messages.Message(
-                                                    "MessageMedicalOperationWillAngerFaction".Translate( pawn2.Faction ),
-                                                    MessageSound.Negative );
-                                            }
-                                        }
-                                    };
-                                }
-                                list.Add( new FloatMenuOption( text, action ) );
-                            }
+                            text = text + " (" + current2.def.label + ")";
                         }
+                        Action action = null;
+                        if ( thingDefs.Any( ) )
+                        {
+                            text += " (";
+                            var flag = true;
+                            foreach ( var current3 in thingDefs )
+                            {
+                                if ( !flag )
+                                {
+                                    text += ", ";
+                                }
+                                flag = false;
+                                text += "MissingMedicalBillIngredient".Translate( current3.label );
+                            }
+                            text += ")";
+                        }
+                        else
+                        {
+                            action = delegate
+                            {
+                                if (
+                                    !Find.MapPawns.FreeColonists.Any( col => localRecipe.PawnSatisfiesSkillRequirements( col ) ) )
+                                {
+                                    Bill.CreateNoPawnsWithSkillDialog( localRecipe );
+                                }
+                                var pawn2 = thingForMedBills as Pawn;
+                                if ( pawn2 != null && !pawn.InBed( ) && pawn.RaceProps.Humanlike )
+                                {
+                                    if (
+                                        !Find.ListerBuildings.allBuildingsColonist.Any( x => x is Building_Bed && ( (Building_Bed) x ).Medical ) )
+                                    {
+                                        Messages.Message( "MessageNoMedicalBeds".Translate( ),
+                                            MessageSound.Negative );
+                                    }
+                                }
+                                var billMedical = new Bill_Medical( localRecipe );
+                                if (pawn2 == null) return;
+                                pawn2.BillStack.AddBill( billMedical );
+                                billMedical.Part = localPart;
+                                if ( pawn2.Faction != null && !pawn2.Faction.def.hidden &&
+                                     !pawn2.Faction.HostileTo( Faction.OfPlayer ) &&
+                                     localRecipe.Worker.IsViolationOnPawn( pawn2, localPart, Faction.OfPlayer ) )
+                                {
+                                    Messages.Message(
+                                        "MessageMedicalOperationWillAngerFaction".Translate( pawn2.Faction ),
+                                        MessageSound.Negative );
+                                }
+                            };
+                        }
+                        list.Add( new FloatMenuOption( text, action ) );
                     }
                 }
             }

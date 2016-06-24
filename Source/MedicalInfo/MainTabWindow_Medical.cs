@@ -21,7 +21,8 @@ namespace Fluffy
         public enum SourceOptions
         {
             Colonists,
-            Prisoners
+            Prisoners,
+            Animals
         }
 
         protected const float LabelRowHeight = 50f;
@@ -39,10 +40,7 @@ namespace Fluffy
 
         public SourceOptions Source = SourceOptions.Colonists;
 
-        public override Vector2 RequestedTabSize
-        {
-            get { return new Vector2( 1050f, 90f + PawnsCount * 30f + 65f ); }
-        }
+        public override Vector2 RequestedTabSize => new Vector2( 1050f, 90f + PawnsCount * 30f + 65f );
 
         public override void PreOpen( )
         {
@@ -61,6 +59,11 @@ namespace Fluffy
                 case SourceOptions.Prisoners:
                     tempPawns = Find.MapPawns.PrisonersOfColony;
                     break;
+                case SourceOptions.Animals:
+                    tempPawns =
+                        Find.MapPawns.AllPawnsSpawned.Where(a => a.RaceProps.Animal && a.Faction == Faction.OfPlayer);
+                    break;
+                case SourceOptions.Colonists:
                 default:
                     tempPawns = Find.MapPawns.FreeColonists;
                     break;
@@ -117,19 +120,37 @@ namespace Fluffy
             var x = 0f;
             Text.Font = GameFont.Small;
 
-            // prisoner / colonist toggle
+            // prisoner / colonist / Animal toggle
             var sourceButton = new Rect( 0f, 0f, 200f, 35f );
-            if ( Widgets.TextButton( sourceButton, Source.ToString( ) ) )
+            if ( Widgets.ButtonText( sourceButton, Source.ToString().Translate( ) ) )
             {
-                Source = Source == SourceOptions.Colonists ? SourceOptions.Prisoners : SourceOptions.Colonists;
-                IsDirty = true;
+                List<FloatMenuOption> options = new List<FloatMenuOption>();
+                if (Source != SourceOptions.Colonists)
+                    options.Add( new FloatMenuOption( "Colonists".Translate(), delegate {
+                        Source = SourceOptions.Colonists;
+                        IsDirty = true;
+                    }));
+
+                if (Source != SourceOptions.Prisoners)
+                    options.Add( new FloatMenuOption( "Prisoners".Translate(), delegate {
+                        Source = SourceOptions.Prisoners;
+                        IsDirty = true;
+                    }));
+
+                if (Source != SourceOptions.Animals)
+                    options.Add( new FloatMenuOption( "Animals".Translate(), delegate {
+                        Source = SourceOptions.Animals;
+                        IsDirty = true;
+                    }));
+
+                Find.WindowStack.Add(new FloatMenu(options));
             }
 
             // name
             var nameLabel = new Rect( x, 50f, 175f, 30f );
             Text.Anchor = TextAnchor.LowerCenter;
             Widgets.Label( nameLabel, "FluffyMedical.Name".Translate( ) );
-            if ( Widgets.InvisibleButton( nameLabel ) )
+            if ( Widgets.ButtonInvisible( nameLabel ) )
             {
                 if ( OrderBy == Order.Name )
                 {
@@ -150,7 +171,7 @@ namespace Fluffy
             // care
             var careLabel = new Rect( x, 50f, 100f, 30f );
             Widgets.Label( careLabel, "FluffyMedical.Care".Translate( ) );
-            if ( Widgets.InvisibleButton( careLabel ) )
+            if ( Widgets.ButtonInvisible( careLabel ) )
             {
                 if ( Event.current.shift )
                 {
@@ -181,7 +202,7 @@ namespace Fluffy
             var bloodLabel = new Rect( x, 50f, 50f, 30f );
             var bloodIcon = new Rect( x + 17f, 60f, 16f, 16f );
             GUI.DrawTexture( bloodIcon, Utility_Medical.BloodTextureWhite );
-            if ( Widgets.InvisibleButton( bloodLabel ) )
+            if ( Widgets.ButtonInvisible( bloodLabel ) )
             {
                 if ( OrderBy == Order.BleedRate )
                 {
@@ -202,7 +223,7 @@ namespace Fluffy
             var opLabel = new Rect( x, 50f, 50f, 30f );
             var opIcon = new Rect( x + 17f, 60f, 16f, 16f );
             GUI.DrawTexture( opIcon, Utility_Medical.OpTexture );
-            if ( Widgets.InvisibleButton( opLabel ) )
+            if ( Widgets.ButtonInvisible( opLabel ) )
             {
                 if ( OrderBy == Order.Operations )
                 {
@@ -232,7 +253,7 @@ namespace Fluffy
                 Widgets.DrawLine( new Vector2( x + colWidth * ( i + 1 ) - colWidth / 2, 40f + ( offset ? 5f : 35f ) ),
                                   new Vector2( x + colWidth * ( i + 1 ) - colWidth / 2, 80f ), Color.gray, 1 );
                 Widgets.Label( defLabel, CapDefs[i].LabelCap );
-                if ( Widgets.InvisibleButton( defLabel ) )
+                if ( Widgets.ButtonInvisible( defLabel ) )
                 {
                     if ( OrderBy == Order.Efficiency && OrderByCapDef == CapDefs[i] )
                     {
@@ -312,7 +333,7 @@ namespace Fluffy
 
             // Operations
             var opLabel = new Rect( x, y, 50f, 30f );
-            if ( Widgets.InvisibleButton( opLabel ) )
+            if ( Widgets.ButtonInvisible( opLabel ) )
             {
                 if ( Event.current.button == 0 )
                 {

@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-	<name>MedicalInfo</name>
+	<name>Medical Tab</name>
 	<author>Fluffy</author>
 	<url></url>
-	<targetVersion>Alpha 12d</targetVersion>
+	<targetVersion>0.14.1211</targetVersion>
 	<description>
 Adds a comprehensive medical overview tab, showing your colonists' health at a glance.
 - Medical care designation
