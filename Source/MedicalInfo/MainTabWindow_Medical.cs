@@ -41,13 +41,7 @@ namespace Fluffy
         public SourceOptions Source = SourceOptions.Colonists;
 
         public override Vector2 RequestedTabSize => new Vector2( 1050f, 90f + PawnsCount * 30f + 65f );
-
-        public override void PreOpen( )
-        {
-            base.PreOpen( );
-            MainTabWindow_Work.Reinit( );
-        }
-
+        
         protected override void BuildPawnList( )
         {
             pawns.Clear( );
