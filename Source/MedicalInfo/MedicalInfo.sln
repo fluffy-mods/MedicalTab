@@ -19,4 +19,37 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.TextStylePolicy = $1
+		$1.inheritsSet = VisualStudio
+		$1.scope = text/plain
+		$1.FileWidth = 120
+		$1.inheritsScope = text/plain
+		$0.CSharpFormattingPolicy = $2
+		$2.inheritsSet = Mono
+		$2.inheritsScope = text/x-csharp
+		$2.scope = text/x-csharp
+		$0.StandardHeader = $3
+		$3.Text = 
+		$3.IncludeInNewFiles = True
+		$0.NameConventionPolicy = $4
+		$4.Rules = $5
+		$5.NamingRule = $6
+		$6.Name = Type Parameters
+		$6.AffectedEntity = TypeParameter
+		$6.VisibilityMask = VisibilityMask
+		$6.NamingStyle = PascalCase
+		$6.IncludeInstanceMembers = True
+		$6.IncludeStaticEntities = True
+		$6.RequiredPrefixes = $7
+		$7.String = T
+		$6.RequiredSuffixes = $8
+		$8.String = Exception
+		$0.DotNetNamingPolicy = $9
+		$9.DirectoryNamespaceAssociation = None
+		$9.ResourceNamePolicy = FileFormatDefault
+		$0.VersionControlPolicy = $10
+		$10.inheritsSet = Mono
+	EndGlobalSection
 EndGlobal
