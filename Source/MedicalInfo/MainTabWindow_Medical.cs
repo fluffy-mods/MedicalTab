@@ -50,14 +50,14 @@ namespace Fluffy
             switch (Source)
             {
                 case SourceOptions.Prisoners:
-                    tempPawns = Find.AnyPlayerHomeMap.mapPawns.PrisonersOfColony;
+                    tempPawns = Find.VisibleMap.mapPawns.PrisonersOfColony;
                     break;
                 case SourceOptions.Animals:
-                    tempPawns = Find.AnyPlayerHomeMap.mapPawns.AllPawnsSpawned.Where(a => a.RaceProps.Animal && a.Faction == Faction.OfPlayer);
+                    tempPawns = Find.VisibleMap.mapPawns.AllPawnsSpawned.Where(a => a.RaceProps.Animal && a.Faction == Faction.OfPlayer);
                     break;
                 case SourceOptions.Colonists:
                 default:
-                    tempPawns = Find.AnyPlayerHomeMap.mapPawns.FreeColonists;
+                    tempPawns = Find.VisibleMap.mapPawns.FreeColonists;
                     break;
             }
 

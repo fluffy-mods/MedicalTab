@@ -199,7 +199,7 @@ namespace Fluffy
                             action = delegate
                             {
                                 if (
-                                    !Find.AnyPlayerHomeMap.mapPawns.FreeColonists.Any( col => localRecipe.PawnSatisfiesSkillRequirements( col ) ) )
+                                    !Find.VisibleMap.mapPawns.FreeColonists.Any( col => localRecipe.PawnSatisfiesSkillRequirements( col ) ) )
                                 {
                                     Bill.CreateNoPawnsWithSkillDialog( localRecipe );
                                 }
@@ -207,7 +207,7 @@ namespace Fluffy
                                 if ( pawn2 != null && !pawn.InBed( ) && pawn.RaceProps.Humanlike )
                                 {
                                     if (
-                                        !Find.AnyPlayerHomeMap.listerBuildings.allBuildingsColonist.Any( x => x is Building_Bed && ( (Building_Bed) x ).Medical ) )
+                                        !Find.VisibleMap.listerBuildings.allBuildingsColonist.Any( x => x is Building_Bed && ( (Building_Bed) x ).Medical ) )
                                     {
                                         Messages.Message( "MessageNoMedicalBeds".Translate( ),
                                             MessageSound.Negative );
