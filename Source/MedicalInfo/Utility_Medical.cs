@@ -160,18 +160,20 @@ namespace Fluffy
             foreach ( var current in thingForMedBills.def.AllRecipes )
             {
                 if (!current.AvailableNow) continue;
-                IEnumerable<ThingDef> enumerable = current.PotentiallyMissingIngredients( null );
-                IEnumerable<ThingDef> thingDefs = enumerable as ThingDef[] ?? enumerable.ToArray( );
+                IEnumerable<ThingDef> enumerable = current.PotentiallyMissingIngredients( null, null );
+                IEnumerable<ThingDef> thingDefs = enumerable as ThingDef[] ?? enumerable.ToArray();
                 if (thingDefs.Any(x => x.isBodyPartOrImplant)) continue;
                 {
                     IEnumerable<BodyPartRecord> partsToApplyOn = current.Worker.GetPartsToApplyOn( pawn, current );
-                    IEnumerable<BodyPartRecord> bodyPartRecords = partsToApplyOn as BodyPartRecord[] ?? partsToApplyOn.ToArray( );
+                    IEnumerable<BodyPartRecord> bodyPartRecords = partsToApplyOn as BodyPartRecord[] ?? partsToApplyOn.ToArray();
                     if (!bodyPartRecords.Any()) continue;
                     foreach ( var current2 in bodyPartRecords )
                     {
                         var localRecipe = current;
                         var localPart = current2;
-                        var text = localRecipe == RecipeDefOf.RemoveBodyPart ? HealthCardUtility.RemoveBodyPartSpecialLabel( pawn, current2 ) : localRecipe.LabelCap;
+                        // Could not found RemoveBodyPartSpecialLabel() for A16.
+                        //var text = localRecipe == RecipeDefOf.RemoveBodyPart ? HealthCardUtility.RemoveBodyPartSpecialLabel( pawn, current2 ) : localRecipe.LabelCap;
+                        var text = localRecipe.LabelCap;
                         if ( !current.hideBodyPartNames )
                         {
                             text = text + " (" + current2.def.label + ")";
@@ -197,7 +199,7 @@ namespace Fluffy
                             action = delegate
                             {
                                 if (
-                                    !Find.MapPawns.FreeColonists.Any( col => localRecipe.PawnSatisfiesSkillRequirements( col ) ) )
+                                    !Find.AnyPlayerHomeMap.mapPawns.FreeColonists.Any( col => localRecipe.PawnSatisfiesSkillRequirements( col ) ) )
                                 {
                                     Bill.CreateNoPawnsWithSkillDialog( localRecipe );
                                 }
@@ -205,7 +207,7 @@ namespace Fluffy
                                 if ( pawn2 != null && !pawn.InBed( ) && pawn.RaceProps.Humanlike )
                                 {
                                     if (
-                                        !Find.ListerBuildings.allBuildingsColonist.Any( x => x is Building_Bed && ( (Building_Bed) x ).Medical ) )
+                                        !Find.AnyPlayerHomeMap.listerBuildings.allBuildingsColonist.Any( x => x is Building_Bed && ( (Building_Bed) x ).Medical ) )
                                     {
                                         Messages.Message( "MessageNoMedicalBeds".Translate( ),
                                             MessageSound.Negative );
