@@ -171,6 +171,7 @@ namespace Fluffy
                     {
                         var localRecipe = current;
                         var localPart = current2;
+                        // Could not found RemoveBodyPartSpecialLabel() for A16.
                         //var text = localRecipe == RecipeDefOf.RemoveBodyPart ? HealthCardUtility.RemoveBodyPartSpecialLabel( pawn, current2 ) : localRecipe.LabelCap;
                         var text = localRecipe.LabelCap;
                         if ( !current.hideBodyPartNames )
