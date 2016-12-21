@@ -160,7 +160,7 @@ namespace Fluffy
             foreach ( var current in thingForMedBills.def.AllRecipes )
             {
                 if (!current.AvailableNow) continue;
-                IEnumerable<ThingDef> enumerable = current.PotentiallyMissingIngredients( null, thingForMedBills.Map );
+                IEnumerable<ThingDef> enumerable = current.PotentiallyMissingIngredients( null, thingForMedBills.MapHeld );
                 IEnumerable<ThingDef> thingDefs = enumerable as ThingDef[] ?? enumerable.ToArray();
                 if (thingDefs.Any(x => x.isBodyPartOrImplant)) continue;
                 {
