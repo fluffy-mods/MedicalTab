@@ -49,8 +49,12 @@
     <Compile Include="Utility_Medical.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup><!-- PostBuildEvent comment out.
+  <PropertyGroup>
+    <!-- PostBuildEvent comment out.
     <PostBuildEvent>release Fluffy_MedicalTab $(TargetDir)\..</PostBuildEvent> -->
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>node ../../postbuild update -x -n "Medical Tab"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
