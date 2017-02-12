@@ -23,6 +23,7 @@ namespace Fluffy
 
         public static Texture2D BloodTexture = ContentFinder<Texture2D>.Get( "UI/Icons/Medical/Bleeding" ),
                                 BloodTextureWhite = ContentFinder<Texture2D>.Get( "UI/Buttons/blood" ),
+                                DiseasesTexture = ContentFinder<Texture2D>.Get("UI/Buttons/blood"),
                                 OpTexture = ContentFinder<Texture2D>.Get( "UI/Buttons/medical" );
 
         private static readonly Queue<BodyPartRecord> MissingBodyPartQueue = new Queue<BodyPartRecord>( );
