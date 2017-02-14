@@ -25,7 +25,7 @@ namespace Fluffy
                                 BloodTextureWhite = ContentFinder<Texture2D>.Get( "UI/Buttons/blood" ),
                                 OpTexture = ContentFinder<Texture2D>.Get( "UI/Buttons/medical" );
 
-        private static readonly Queue<BodyPartRecord> MissingBodyPartQueue = new Queue<BodyPartRecord>( );
+        //private static readonly Queue<BodyPartRecord> MissingBodyPartQueue = new Queue<BodyPartRecord>( );
 
         public static void MedicalCareSetter( Rect rect, ref MedicalCareCategory medCare )
         {
@@ -50,7 +50,7 @@ namespace Fluffy
                 rect2.x += rect2.width;
             }
         }
-
+        /*
         public static List<BodyPartRecord> NonMissingParts( Pawn p )
         {
             var diffSet = p.health.hediffSet;
@@ -76,7 +76,7 @@ namespace Fluffy
             }
             return nonMissingParts;
         }
-
+        */
         public static void DoHediffTooltip( Rect rect, Pawn p, string effLabel, PawnCapacityDef capDef )
         {
             var tooltip = new StringBuilder( );
@@ -121,28 +121,42 @@ namespace Fluffy
             TooltipHandler.TipRegion( rect, tooltip.ToString( ) );
         }
 
-        public static void DoHediffTooltip(Rect rect, Pawn p, float percent)
+        public static void DoHediffTooltip(Rect rect, Pawn p, float bleedRate, float healthPercent)
         {
-            if (Mathf.Approximately(percent, 1f))
+            var tooltip = new StringBuilder();
+            tooltip.AppendLine("BleedingRate".Translate() + ": " + bleedRate.ToStringPercent() + "/" + "LetterDay".Translate());
+            if (!Mathf.Approximately(bleedRate, 0f))
             {
-                TooltipHandler.TipRegion(rect, "OK");
+                var ticksBloodLoss = HealthUtility.TicksUntilDeathDueToBloodLoss(p);
+                tooltip.AppendLine(ticksBloodLoss < 60000 ? " (" + "TimeToDeath".Translate(ticksBloodLoss.ToStringTicksToPeriod(true)) + ")" : " (" + "WontBleedOutSoon".Translate() + ")");
+            }
+            tooltip.AppendLine();
+            tooltip.AppendLine("FluffyMedical.HealthPoints".Translate() + ": " + healthPercent.ToStringPercent());
+            if (Mathf.Approximately(healthPercent, 1f))
+            {
+                TooltipHandler.TipRegion(rect, tooltip.ToString());
                 return;
             }
 
             try
             {
-                var tooltip = new StringBuilder();
-                var hediffs = p.health.hediffSet.hediffs;
-                foreach (var hediff in hediffs)
+                var bodyPartRecords = p.RaceProps.body.AllParts;
+                foreach (var bodyPartRecord in bodyPartRecords)
                 {
-                    tooltip.AppendLine(hediff.Part.def.LabelCap + ": " + p.health.hediffSet.GetPartHealth(hediff.Part).ToString() + " / " + hediff.Part.def.GetMaxHealth(p).ToString());
+                    var healthPoint = p.health.hediffSet.GetPartHealth(bodyPartRecord);
+                    var hitPoint = bodyPartRecord.def.GetMaxHealth(p);
+
+                    if (Mathf.Approximately(healthPoint, hitPoint))
+                            continue;
+
+                    tooltip.AppendLine(bodyPartRecord.def.LabelCap + ": " + healthPoint.ToString() + " / " + bodyPartRecord.def.GetMaxHealth(p).ToString());
                 }
-                TooltipHandler.TipRegion(rect, tooltip.ToString());
             }
             catch (Exception)
             {
                 Log.Message("Error getting tooltip for medical info.");
             }
+            TooltipHandler.TipRegion(rect, tooltip.ToString());
         }
 
         public static void MedicalCareSetterAll( List<Pawn> pawns )
@@ -250,31 +264,6 @@ namespace Fluffy
                 }
             }
             Find.WindowStack.Add( new FloatMenu( list ) );
-        }
-
-        public static Color HealthPercentColor(float percent) {
-            var MediumPainColor = new Color(.9f, .9f, 0f);
-            var SeverePainColor = new Color(.9f, .5f, 0f);
-            if (Mathf.Approximately(percent, 0f))
-            {
-                return Color.gray;
-            }
-            else if (percent > .8f)
-            {
-                return HealthUtility.GoodConditionColor;
-            }
-            else if (percent > .5f)
-            {
-                return MediumPainColor;
-            }
-            else if (percent > .2f)
-            {
-                return SeverePainColor;
-            }
-            else
-            {
-                return HealthUtility.DarkRedColor;
-            }
         }
     }
 }

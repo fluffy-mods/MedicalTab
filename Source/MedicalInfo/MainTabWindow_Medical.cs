@@ -80,11 +80,6 @@ namespace Fluffy
                              orderby p.BillStack.Count
                              select p).ToList();
                     break;
-                case Order.HealthPoints:
-                    pawns = (from p in tempPawns
-                             orderby p.health.summaryHealth.SummaryHealthPercent
-                             select p).ToList();
-                    break;
                 case Order.Pain:
                     pawns = (from p in tempPawns
                              orderby p.health.hediffSet.PainTotal
@@ -151,7 +146,7 @@ namespace Fluffy
             }
 
             // name
-            var nameLabel = new Rect( x, 50f, 175f, 30f );
+            var nameLabel = new Rect( x, 50f, 165f, 30f );
             Text.Anchor = TextAnchor.LowerCenter;
             Widgets.Label(nameLabel, "FluffyMedical.Name".Translate());
             if (Widgets.ButtonInvisible(nameLabel))
@@ -169,7 +164,7 @@ namespace Fluffy
             }
             TooltipHandler.TipRegion(nameLabel, "FluffyMedical.ClickToSortBy".Translate("FluffyMedical.Name".Translate()));
             Widgets.DrawHighlightIfMouseover(nameLabel);
-            x += 175f;
+            x += 165f;
 
             // care
             var careLabel = new Rect(x, 50f, 100f, 30f);
@@ -242,35 +237,12 @@ namespace Fluffy
             x += 50f;
 
             // extra 15f offset for... what? makes labels roughly align.
-            var colWidth = (rect.width - x - 15f) / (CapDefs.Count + 2);
+            var colWidth = (rect.width - x - 15f) / (CapDefs.Count + 1);
             var offset = true;
 
-            // HealthPoints
-            var hpLabel = new Rect(x - colWidth / 2, 20f, colWidth * 2, 30f);
-            Widgets.DrawLine(new Vector2(x + colWidth - colWidth / 2, 45f),
-                             new Vector2(x + colWidth - colWidth / 2, 80f), Color.gray, 1);
-            Widgets.Label(hpLabel, "FluffyMedical.HealthPoints".Translate());
-            if (Widgets.ButtonInvisible(hpLabel))
-            {
-                if (OrderBy == Order.HealthPoints)
-                {
-                    Asc = !Asc;
-                }
-                else
-                {
-                    OrderBy = Order.HealthPoints;
-                    Asc = true;
-                }
-                IsDirty = true;
-            }
-            TooltipHandler.TipRegion(hpLabel, "FluffyMedical.ClickToSortBy".Translate("FluffyMedical.HealthPoints".Translate()));
-            Widgets.DrawHighlightIfMouseover(hpLabel);
-            offset = !offset;
-            x += colWidth;
-
             // Pain
-            var painLabel = new Rect(x - colWidth / 2, 50f, colWidth * 2, 30f);
-            Widgets.DrawLine(new Vector2(x + colWidth - colWidth / 2, 75f),
+            var painLabel = new Rect(x - colWidth / 2, 10f + (offset ? 10f : 40f), colWidth * 2, 30f);
+            Widgets.DrawLine(new Vector2(x + colWidth - colWidth / 2, 40f + (offset ? 5f : 35f)),
                              new Vector2(x + colWidth - colWidth / 2, 80f), Color.gray, 1);
             Widgets.Label(painLabel, "PainLevel".Translate());
             if (Widgets.ButtonInvisible(painLabel))
@@ -341,7 +313,7 @@ namespace Fluffy
         protected override void DrawPawnRow(Rect rect, Pawn p)
         {
             // name is handled in PreDrawRow, start at 175
-            var x = 175f;
+            var x = 165f;
             var y = rect.yMin;
 
             // care
@@ -352,6 +324,7 @@ namespace Fluffy
             // blood
             var bloodRect = new Rect(x, y, 50f, 30f);
             var bleedRate = p.health.hediffSet.BleedRateTotal; // float in range 0 - 1
+            var healthPercent = p.health.summaryHealth.SummaryHealthPercent;
             float iconSize;
             if (bleedRate < 0.01f)
             {
@@ -371,8 +344,7 @@ namespace Fluffy
             }
             var iconRect = Inner(bloodRect, iconSize);
             GUI.DrawTexture(iconRect, Utility_Medical.BloodTexture);
-            TooltipHandler.TipRegion(bloodRect,
-                                     "BleedingRate".Translate() + ": " + bleedRate.ToStringPercent( ) + "/" +  "LetterDay".Translate());
+            Utility_Medical.DoHediffTooltip(bloodRect, p, bleedRate, healthPercent);
             Widgets.DrawHighlightIfMouseover(bloodRect);
             x += 50f;
 
@@ -416,24 +388,13 @@ namespace Fluffy
             x += 50f;
 
             // main window
-            var colWidth = (rect.width - x) / (CapDefs.Count + 2);
+            var colWidth = (rect.width - x) / (CapDefs.Count + 1);
             Text.Anchor = TextAnchor.MiddleCenter;
 
-            var healthCell = new Rect(x, y, colWidth, 30f);
-            var healthPercent = p.health.summaryHealth.SummaryHealthPercent;
-            var healthPercentage = (healthPercent * 100f).ToString("F0") + "%";
-            GUI.color = Utility_Medical.HealthPercentColor(healthPercent);
-            Widgets.Label(healthCell, healthPercentage);
-            if (Mouse.IsOver(healthCell))
-            {
-                GUI.DrawTexture(healthCell, TexUI.HighlightTex);
-            }
-            Utility_Medical.DoHediffTooltip(healthCell, p, healthPercent);
-            x += colWidth;
-
+            // Pain
             var painCell = new Rect(x, y, colWidth, 30f);
             var painLabel = HealthCardUtility.GetPainLabel(p);
-            var painPersent = (p.health.hediffSet.PainTotal * 100f).ToString("F0") + "%";
+            var painPersent = p.health.hediffSet.PainTotal.ToStringPercent();
             GUI.color = painLabel.Second;
             Widgets.Label(painCell, painPersent);
             if (Mouse.IsOver(painCell))
@@ -443,10 +404,11 @@ namespace Fluffy
             TooltipHandler.TipRegion(painCell, painLabel.First);
             x += colWidth;
 
+            // Efficiency
             foreach (PawnCapacityDef t in CapDefs) {
                 var capDefCell = new Rect(x, y, colWidth, 30f);
                 var colorPair = HealthCardUtility.GetEfficiencyLabel(p, t);
-                var label = (p.health.capacities.GetEfficiency(t) * 100f).ToString("F0") + "%";
+                var label = p.health.capacities.GetEfficiency(t).ToStringPercent();
                 GUI.color = colorPair.Second;
                 Widgets.Label(capDefCell, label);
                 if (Mouse.IsOver(capDefCell))
