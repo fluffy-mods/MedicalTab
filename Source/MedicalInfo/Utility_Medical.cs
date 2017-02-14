@@ -77,10 +77,10 @@ namespace Fluffy
             return nonMissingParts;
         }
 
-        public static void DoHediffTooltip( Rect rect, Pawn p, PawnCapacityDef capDef )
+        public static void DoHediffTooltip( Rect rect, Pawn p, string effLabel, PawnCapacityDef capDef )
         {
             var tooltip = new StringBuilder( );
-            var tip = false;
+            tooltip.AppendLine( effLabel );
             try
             {
                 // get parts that matter for this capDef
@@ -109,7 +109,6 @@ namespace Fluffy
                                                                                      relevantParts.Contains( h.Part ) ) );
                 foreach ( var diff in hediffs )
                 {
-                    tip = true;
                     tooltip.AppendLine( ( diff.Part == null ? "Whole body" : diff.Part.def.LabelCap ) + ": " +
                                         diff.LabelCap );
                 }
@@ -119,12 +118,31 @@ namespace Fluffy
                 Log.Message( "Error getting tooltip for medical info." );
             }
 
-            if ( !tip )
+            TooltipHandler.TipRegion( rect, tooltip.ToString( ) );
+        }
+
+        public static void DoHediffTooltip(Rect rect, Pawn p, float percent)
+        {
+            if (Mathf.Approximately(percent, 1f))
             {
-                tooltip.AppendLine( "OK" );
+                TooltipHandler.TipRegion(rect, "OK");
+                return;
             }
 
-            TooltipHandler.TipRegion( rect, tooltip.ToString( ) );
+            try
+            {
+                var tooltip = new StringBuilder();
+                var hediffs = p.health.hediffSet.hediffs;
+                foreach (var hediff in hediffs)
+                {
+                    tooltip.AppendLine(hediff.Part.def.LabelCap + ": " + p.health.hediffSet.GetPartHealth(hediff.Part).ToString() + " / " + hediff.Part.def.GetMaxHealth(p).ToString());
+                }
+                TooltipHandler.TipRegion(rect, tooltip.ToString());
+            }
+            catch (Exception)
+            {
+                Log.Message("Error getting tooltip for medical info.");
+            }
         }
 
         public static void MedicalCareSetterAll( List<Pawn> pawns )
@@ -232,6 +250,31 @@ namespace Fluffy
                 }
             }
             Find.WindowStack.Add( new FloatMenu( list ) );
+        }
+
+        public static Color HealthPercentColor(float percent) {
+            var MediumPainColor = new Color(.9f, .9f, 0f);
+            var SeverePainColor = new Color(.9f, .5f, 0f);
+            if (Mathf.Approximately(percent, 0f))
+            {
+                return Color.gray;
+            }
+            else if (percent > .8f)
+            {
+                return HealthUtility.GoodConditionColor;
+            }
+            else if (percent > .5f)
+            {
+                return MediumPainColor;
+            }
+            else if (percent > .2f)
+            {
+                return SeverePainColor;
+            }
+            else
+            {
+                return HealthUtility.DarkRedColor;
+            }
         }
     }
 }

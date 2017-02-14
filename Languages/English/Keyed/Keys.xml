@@ -4,7 +4,7 @@
 <!-- MainTabWindow_Medical -->
     <FluffyMedical.Care>Medical care</FluffyMedical.Care>
     <FluffyMedical.Name>Name</FluffyMedical.Name>
-    <FluffyMedical.HealthPercentage>Health</FluffyMedical.HealthPercentage>
+    <FluffyMedical.HealthPoints>Health</FluffyMedical.HealthPoints>
     <Animals>Animals</Animals>
     <Colonists>Colonists</Colonists>
     <Prisoners>Prisoners</Prisoners>

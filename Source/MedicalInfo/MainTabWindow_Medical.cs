@@ -15,6 +15,8 @@ namespace Fluffy
             Care,
             BleedRate,
             Operations,
+            HealthPoints,
+            Pain,
             Efficiency
         }
 
@@ -76,6 +78,16 @@ namespace Fluffy
                 case Order.Operations:
                     pawns = (from p in tempPawns
                              orderby p.BillStack.Count
+                             select p).ToList();
+                    break;
+                case Order.HealthPoints:
+                    pawns = (from p in tempPawns
+                             orderby p.health.summaryHealth.SummaryHealthPercent
+                             select p).ToList();
+                    break;
+                case Order.Pain:
+                    pawns = (from p in tempPawns
+                             orderby p.health.hediffSet.PainTotal
                              select p).ToList();
                     break;
                 case Order.Efficiency:
@@ -212,7 +224,7 @@ namespace Fluffy
             var opLabel = new Rect(x, 50f, 50f, 30f);
             var opIcon = new Rect(x + 17f, 60f, 16f, 16f);
             GUI.DrawTexture(opIcon, Utility_Medical.OpTexture);
-            if (Widgets.ButtonInvisible( opLabel))
+            if (Widgets.ButtonInvisible(opLabel))
             {
                 if (OrderBy == Order.Operations)
                 {
@@ -229,61 +241,82 @@ namespace Fluffy
             Widgets.DrawHighlightIfMouseover(opLabel);
             x += 50f;
 
-            var offset = true;
-
             // extra 15f offset for... what? makes labels roughly align.
             var colWidth = (rect.width - x - 15f) / (CapDefs.Count + 2);
-            for (var i = 0; i < 2; i++)
+            var offset = true;
+
+            // HealthPoints
+            var hpLabel = new Rect(x - colWidth / 2, 20f, colWidth * 2, 30f);
+            Widgets.DrawLine(new Vector2(x + colWidth - colWidth / 2, 45f),
+                             new Vector2(x + colWidth - colWidth / 2, 80f), Color.gray, 1);
+            Widgets.Label(hpLabel, "FluffyMedical.HealthPoints".Translate());
+            if (Widgets.ButtonInvisible(hpLabel))
             {
-                var label = offset ? "FluffyMedical.HealthPercentage".Translate() : "PainLevel".Translate();
-                var defLabel = new Rect(x + colWidth * i - colWidth / 2, 10f + ( offset ? 10f : 40f), colWidth * 2, 30f);
-                Widgets.DrawLine(new Vector2(x + colWidth * (i + 1) - colWidth / 2, 40f + (offset ? 5f : 35f)),
-                                 new Vector2(x + colWidth * (i + 1) - colWidth / 2, 80f), Color.gray, 1);
-                Widgets.Label(defLabel, label);
-                if (Widgets.ButtonInvisible(defLabel))
+                if (OrderBy == Order.HealthPoints)
                 {
-                    if (OrderBy == Order.Efficiency)
-                    {
-                        Asc = !Asc;
-                    }
-                    else
-                    {
-                        OrderBy = Order.Efficiency;
-                        Asc = true;
-                    }
-                    IsDirty = true;
+                    Asc = !Asc;
                 }
-                TooltipHandler.TipRegion(defLabel, "FluffyMedical.ClickToSortBy".Translate(label));
-                Widgets.DrawHighlightIfMouseover(defLabel);
-                
-                offset = !offset;
+                else
+                {
+                    OrderBy = Order.HealthPoints;
+                    Asc = true;
+                }
+                IsDirty = true;
             }
+            TooltipHandler.TipRegion(hpLabel, "FluffyMedical.ClickToSortBy".Translate("FluffyMedical.HealthPoints".Translate()));
+            Widgets.DrawHighlightIfMouseover(hpLabel);
+            offset = !offset;
+            x += colWidth;
 
-            for (var i = 2; i < CapDefs.Count + 2; i++)
+            // Pain
+            var painLabel = new Rect(x - colWidth / 2, 50f, colWidth * 2, 30f);
+            Widgets.DrawLine(new Vector2(x + colWidth - colWidth / 2, 75f),
+                             new Vector2(x + colWidth - colWidth / 2, 80f), Color.gray, 1);
+            Widgets.Label(painLabel, "PainLevel".Translate());
+            if (Widgets.ButtonInvisible(painLabel))
             {
-                var p = i - 2;
-                var defLabel = new Rect(x + colWidth * i - colWidth / 2, 10f + ( offset ? 10f : 40f), colWidth * 2, 30f);
-                Widgets.DrawLine(new Vector2(x + colWidth * (i + 1) - colWidth / 2, 40f + (offset ? 5f : 35f)),
-                                 new Vector2(x + colWidth * (i + 1) - colWidth / 2, 80f), Color.gray, 1);
-                Widgets.Label(defLabel, CapDefs[p].LabelCap);
-                if (Widgets.ButtonInvisible(defLabel))
+                if (OrderBy == Order.Pain)
                 {
-                    if (OrderBy == Order.Efficiency && OrderByCapDef == CapDefs[i])
+                    Asc = !Asc;
+                }
+                else
+                {
+                    OrderBy = Order.Pain;
+                    Asc = true;
+                }
+                IsDirty = true;
+            }
+            TooltipHandler.TipRegion(painLabel, "FluffyMedical.ClickToSortBy".Translate("PainLevel".Translate()));
+            Widgets.DrawHighlightIfMouseover(painLabel);
+            offset = !offset;
+            x += colWidth;
+
+            // Efficiency
+            foreach (PawnCapacityDef capDef in CapDefs)
+            {
+                var defLabel = new Rect(x - colWidth / 2, 10f + (offset ? 10f : 40f), colWidth * 2, 30f);
+                Widgets.DrawLine(new Vector2(x + colWidth - colWidth / 2, 40f + (offset ? 5f : 35f)),
+                                 new Vector2(x + colWidth - colWidth / 2, 80f), Color.gray, 1);
+                Widgets.Label(defLabel, capDef.LabelCap);
+                if(Widgets.ButtonInvisible(defLabel))
+                {
+                    if (OrderBy == Order.Efficiency && OrderByCapDef == capDef)
                     {
                         Asc = !Asc;
                     }
                     else
                     {
                         OrderBy = Order.Efficiency;
-                        OrderByCapDef = CapDefs[i];
+                        OrderByCapDef = capDef;
                         Asc = true;
                     }
                     IsDirty = true;
                 }
-                TooltipHandler.TipRegion(defLabel, "FluffyMedical.ClickToSortBy".Translate( CapDefs[p].LabelCap));
+                TooltipHandler.TipRegion(defLabel, "FluffyMedical.ClickToSortBy".Translate(capDef.LabelCap));
                 Widgets.DrawHighlightIfMouseover(defLabel);
 
                 offset = !offset;
+                x += colWidth;
             }
 
             GUI.EndGroup();
@@ -389,36 +422,13 @@ namespace Fluffy
             var healthCell = new Rect(x, y, colWidth, 30f);
             var healthPercent = p.health.summaryHealth.SummaryHealthPercent;
             var healthPercentage = (healthPercent * 100f).ToString("F0") + "%";
-            Color color;
-            Color MediumPainColor = new Color(.9f, .9f, 0f);
-            Color SeverePainColor = new Color(.9f, .5f, 0f);
-            if (Mathf.Approximately(healthPercent, 0f))
-            {
-                color = Color.gray;
-            }
-            else if (healthPercent > .8f)
-            {
-                color = HealthUtility.GoodConditionColor;
-            }
-            else if (healthPercent > .5f)
-            {
-                color = MediumPainColor;
-            }
-            else if (healthPercent > .2f)
-            {
-                color = SeverePainColor;
-            }
-            else
-            {
-                color = HealthUtility.DarkRedColor;
-            }
-
-            GUI.color = color;
+            GUI.color = Utility_Medical.HealthPercentColor(healthPercent);
             Widgets.Label(healthCell, healthPercentage);
             if (Mouse.IsOver(healthCell))
             {
                 GUI.DrawTexture(healthCell, TexUI.HighlightTex);
             }
+            Utility_Medical.DoHediffTooltip(healthCell, p, healthPercent);
             x += colWidth;
 
             var painCell = new Rect(x, y, colWidth, 30f);
@@ -443,7 +453,7 @@ namespace Fluffy
                 {
                     GUI.DrawTexture(capDefCell, TexUI.HighlightTex);
                 }
-                Utility_Medical.DoHediffTooltip(capDefCell, p, t);
+                Utility_Medical.DoHediffTooltip(capDefCell, p, colorPair.First, t);
                 x += colWidth;
             }
         }

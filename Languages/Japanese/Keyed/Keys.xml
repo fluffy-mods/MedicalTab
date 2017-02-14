@@ -4,7 +4,7 @@
 <!-- MainTabWindow_Medical -->　
     <FluffyMedical.Care>治療レベル</FluffyMedical.Care>
     <FluffyMedical.Name>名前</FluffyMedical.Name>
-    <FluffyMedical.HealthPercentage>体力</FluffyMedical.HealthPercentage>
+    <FluffyMedical.HealthPoints>体力</FluffyMedical.HealthPoints>
     <FluffyMedical.ClickToSortBy>{0}で並び替え</FluffyMedical.ClickToSortBy>
     <FluffyMedical.ClickTo>左クリックで{0}</FluffyMedical.ClickTo>
     <FluffyMedical.RightClickTo>右クリックで{0}</FluffyMedical.RightClickTo>
