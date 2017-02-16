@@ -25,8 +25,6 @@ namespace Fluffy
                                 BloodTextureWhite = ContentFinder<Texture2D>.Get( "UI/Buttons/blood" ),
                                 OpTexture = ContentFinder<Texture2D>.Get( "UI/Buttons/medical" );
 
-        //private static readonly Queue<BodyPartRecord> MissingBodyPartQueue = new Queue<BodyPartRecord>( );
-
         public static void MedicalCareSetter( Rect rect, ref MedicalCareCategory medCare )
         {
             var iconSize = rect.width / 5f;
@@ -50,33 +48,7 @@ namespace Fluffy
                 rect2.x += rect2.width;
             }
         }
-        /*
-        public static List<BodyPartRecord> NonMissingParts( Pawn p )
-        {
-            var diffSet = p.health.hediffSet;
-            var nonMissingParts = new List<BodyPartRecord>( );
-            MissingBodyPartQueue.Clear( );
-            MissingBodyPartQueue.Enqueue( p.def.race.body.corePart );
-            while ( MissingBodyPartQueue.Count != 0 )
-            {
-                var node = MissingBodyPartQueue.Dequeue( );
-                if ( !diffSet.PartOrAnyAncestorHasDirectlyAddedParts( node ) )
-                {
-                    var hediffMissingPart = ( from x in diffSet.GetHediffs<Hediff_MissingPart>( )
-                                               where x.Part == node
-                                               select x ).FirstOrDefault( );
-                    if ( hediffMissingPart == null )
-                    {
-                        nonMissingParts.Add( node );
-                        foreach ( var t in node.parts ) {
-                            MissingBodyPartQueue.Enqueue( t );
-                        }
-                    }
-                }
-            }
-            return nonMissingParts;
-        }
-        */
+
         public static void DoHediffTooltip( Rect rect, Pawn p, string effLabel, PawnCapacityDef capDef )
         {
             var tooltip = new StringBuilder( );

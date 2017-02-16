@@ -15,7 +15,6 @@ namespace Fluffy
             Care,
             BleedRate,
             Operations,
-            HealthPoints,
             Pain,
             Efficiency
         }
