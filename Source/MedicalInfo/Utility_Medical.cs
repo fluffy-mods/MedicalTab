@@ -25,8 +25,6 @@ namespace Fluffy
                                 BloodTextureWhite = ContentFinder<Texture2D>.Get( "UI/Buttons/blood" ),
                                 OpTexture = ContentFinder<Texture2D>.Get( "UI/Buttons/medical" );
 
-        private static readonly Queue<BodyPartRecord> MissingBodyPartQueue = new Queue<BodyPartRecord>( );
-
         public static void MedicalCareSetter( Rect rect, ref MedicalCareCategory medCare )
         {
             var iconSize = rect.width / 5f;
@@ -51,36 +49,10 @@ namespace Fluffy
             }
         }
 
-        public static List<BodyPartRecord> NonMissingParts( Pawn p )
-        {
-            var diffSet = p.health.hediffSet;
-            var nonMissingParts = new List<BodyPartRecord>( );
-            MissingBodyPartQueue.Clear( );
-            MissingBodyPartQueue.Enqueue( p.def.race.body.corePart );
-            while ( MissingBodyPartQueue.Count != 0 )
-            {
-                var node = MissingBodyPartQueue.Dequeue( );
-                if ( !diffSet.PartOrAnyAncestorHasDirectlyAddedParts( node ) )
-                {
-                    var hediffMissingPart = ( from x in diffSet.GetHediffs<Hediff_MissingPart>( )
-                                               where x.Part == node
-                                               select x ).FirstOrDefault( );
-                    if ( hediffMissingPart == null )
-                    {
-                        nonMissingParts.Add( node );
-                        foreach ( var t in node.parts ) {
-                            MissingBodyPartQueue.Enqueue( t );
-                        }
-                    }
-                }
-            }
-            return nonMissingParts;
-        }
-
-        public static void DoHediffTooltip( Rect rect, Pawn p, PawnCapacityDef capDef )
+        public static void DoHediffTooltip( Rect rect, Pawn p, string effLabel, PawnCapacityDef capDef )
         {
             var tooltip = new StringBuilder( );
-            var tip = false;
+            tooltip.AppendLine( effLabel );
             try
             {
                 // get parts that matter for this capDef
@@ -109,7 +81,6 @@ namespace Fluffy
                                                                                      relevantParts.Contains( h.Part ) ) );
                 foreach ( var diff in hediffs )
                 {
-                    tip = true;
                     tooltip.AppendLine( ( diff.Part == null ? "Whole body" : diff.Part.def.LabelCap ) + ": " +
                                         diff.LabelCap );
                 }
@@ -119,12 +90,45 @@ namespace Fluffy
                 Log.Message( "Error getting tooltip for medical info." );
             }
 
-            if ( !tip )
+            TooltipHandler.TipRegion( rect, tooltip.ToString( ) );
+        }
+
+        public static void DoHediffTooltip(Rect rect, Pawn p, float bleedRate, float healthPercent)
+        {
+            var tooltip = new StringBuilder();
+            tooltip.AppendLine("BleedingRate".Translate() + ": " + bleedRate.ToStringPercent() + "/" + "LetterDay".Translate());
+            if (!Mathf.Approximately(bleedRate, 0f))
             {
-                tooltip.AppendLine( "OK" );
+                var ticksBloodLoss = HealthUtility.TicksUntilDeathDueToBloodLoss(p);
+                tooltip.AppendLine(ticksBloodLoss < 60000 ? " (" + "TimeToDeath".Translate(ticksBloodLoss.ToStringTicksToPeriod(true)) + ")" : " (" + "WontBleedOutSoon".Translate() + ")");
+            }
+            tooltip.AppendLine();
+            tooltip.AppendLine("FluffyMedical.HealthPoints".Translate() + ": " + healthPercent.ToStringPercent());
+            if (Mathf.Approximately(healthPercent, 1f))
+            {
+                TooltipHandler.TipRegion(rect, tooltip.ToString());
+                return;
             }
 
-            TooltipHandler.TipRegion( rect, tooltip.ToString( ) );
+            try
+            {
+                var bodyPartRecords = p.RaceProps.body.AllParts;
+                foreach (var bodyPartRecord in bodyPartRecords)
+                {
+                    var healthPoint = p.health.hediffSet.GetPartHealth(bodyPartRecord);
+                    var hitPoint = bodyPartRecord.def.GetMaxHealth(p);
+
+                    if (Mathf.Approximately(healthPoint, hitPoint))
+                            continue;
+
+                    tooltip.AppendLine(bodyPartRecord.def.LabelCap + ": " + healthPoint.ToString() + " / " + bodyPartRecord.def.GetMaxHealth(p).ToString());
+                }
+            }
+            catch (Exception)
+            {
+                Log.Message("Error getting tooltip for medical info.");
+            }
+            TooltipHandler.TipRegion(rect, tooltip.ToString());
         }
 
         public static void MedicalCareSetterAll( List<Pawn> pawns )
