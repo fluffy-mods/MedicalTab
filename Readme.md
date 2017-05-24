@@ -6,13 +6,21 @@ Adds a comprehensive medical overview tab, showing your colonists' health at a g
 Does not require a new save game 
 Can safely be enabled/disabled in ongoing saves. 
 
+# Note
+The medical tab was rebuild from the ground up for A17. That means many improvements, but possibly also some new bugs. Please let me know if you found any bugs, weird behaviours, or have a suggestion.
+
 # Features
-Medical care designation 
-Schedule operations 
+Shows vital medical statistics for Colonists, Animals, Prisoners, Visitors and Hostiles*.
+Medical care designation, including mass and default assignments
+Overview of bleeding rates, pain and infection/disease/immunity progress
+See efficiency on all capabilities
+Schedule new operations and see planned operations
 Sort by everything 
 
-# Notes
-Detecting which diseases/wounds/etc affect a certain body function is not as easy as one might expect it to be. There may be some inconsistencies in the labels associated with efficiency scores. If you encounter any, please leave a report so I can try and fix them. 
+*: The hostile tab will by default only show downed hostiles, as I consider showing all hostiles cheating. There's a toggle in the mod options to show all hostiles instead.
+
+# Powered by Harmony
+![Powered by Harmony](https://camo.githubusercontent.com/074bf079275fa90809f51b74e9dd0deccc70328f/68747470733a2f2f7332342e706f7374696d672e6f72672f3538626c31727a33392f6c6f676f2e706e67)
 
 # Contributors
  - Racoon:	German translation
@@ -35,4 +43,4 @@ All original content (e.g. text, imagery, sounds) in this mod is licensed under 
 Parts of the code in this mod, and some content may be licensed by their original authors. If this is the case, the original author & license will either be given in the source code, or be in a LICENSE file next to the content. Please do not decompile my mods, but use the original source code available on [GitHub](https://github.com/FluffierThanThou/MedicalTab/), so license information in the source code is preserved.
 
 # Version
-This is version v0.17.0.1
+This is version v0.17.1.0

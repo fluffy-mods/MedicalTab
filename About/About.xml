@@ -3,20 +3,28 @@
   <name>Medical Tab</name>
   <author>Fluffy</author>
   <url/>
-  <targetVersion>0.17.1543</targetVersion>
+  <targetVersion>0.17.1546</targetVersion>
   <description>Adds a comprehensive medical overview tab, showing your colonists’ health at a glance. 
 
 &lt;size=24&gt;Important&lt;/size&gt;
 Does not require a new save game 
 Can safely be enabled/disabled in ongoing saves. 
 
+&lt;size=24&gt;Note&lt;/size&gt;
+The medical tab was rebuild from the ground up for A17. That means many improvements, but possibly also some new bugs. Please let me know if you found any bugs, weird behaviours, or have a suggestion.
+
 &lt;size=24&gt;Features&lt;/size&gt;
-Medical care designation 
-Schedule operations 
+Shows vital medical statistics for Colonists, Animals, Prisoners, Visitors and Hostiles*.
+Medical care designation, including mass and default assignments
+Overview of bleeding rates, pain and infection/disease/immunity progress
+See efficiency on all capabilities
+Schedule new operations and see planned operations
 Sort by everything 
 
-&lt;size=24&gt;Notes&lt;/size&gt;
-Detecting which diseases/wounds/etc affect a certain body function is not as easy as one might expect it to be. There may be some inconsistencies in the labels associated with efficiency scores. If you encounter any, please leave a report so I can try and fix them. 
+*: The hostile tab will by default only show downed hostiles, as I consider showing all hostiles cheating. There’s a toggle in the mod options to show all hostiles instead.
+
+&lt;size=24&gt;Powered by Harmony&lt;/size&gt;
+
 
 &lt;size=24&gt;Contributors&lt;/size&gt;
 
