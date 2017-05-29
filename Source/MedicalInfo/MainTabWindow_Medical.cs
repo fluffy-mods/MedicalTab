@@ -126,7 +126,7 @@ namespace Fluffy
 
                 foreach (SourceType sourceOption in Enum.GetValues(typeof(SourceType)).OfType<SourceType>())
                     if (sourceOption != Source)
-                        options.Add(new FloatMenuOption(sourceOption.ToString(), delegate { Source = sourceOption; }));
+                        options.Add(new FloatMenuOption(sourceOption.ToString().Translate(), delegate { Source = sourceOption; }));
 
                 Find.WindowStack.Add(new FloatMenu(options));
             }
