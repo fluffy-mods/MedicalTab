@@ -150,12 +150,16 @@ namespace Fluffy
         public static bool AdministersDrugThatAffects(this RecipeDef r, PawnCapacityDef capacity, float current,
                                                        bool negative = false)
         {
+            if ( r.ingredients.NullOrEmpty() )
+                return false;
             return r.ingredients[0].filter.BestThingRequest.singleDef.AffectsCapacityOnIngestion(capacity, current,
                                                                                                   negative);
         }
 
         public static bool AdministersDrugThatReducesPain(this RecipeDef r)
         {
+            if (r.ingredients.NullOrEmpty())
+                return false;
             return r.ingredients[0].filter.BestThingRequest.singleDef.ReducesPainOnIngestion();
         }
 
@@ -221,7 +225,10 @@ namespace Fluffy
 
         public static bool IsHediffThatReducesPain(this HediffDef hediffDef)
         {
-            return hediffDef?.stages?.Any(hs => hs.painFactor < 1f || hs.painOffset < 0f) ?? false;
+            if (hediffDef?.stages.NullOrEmpty() ?? true)
+                return false;
+
+            return hediffDef.stages?.Any(hs => hs.painFactor < 1f || hs.painOffset < 0f) ?? false;
         }
 
         public static bool NotMissingVitalIngredient(Pawn pawn, RecipeDef r)
