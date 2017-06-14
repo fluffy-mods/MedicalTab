@@ -244,12 +244,18 @@ namespace Fluffy
                    .Any(od => od.hediffDef.IsHediffThatReducesPain()) ?? false;
         }
 
-        public static bool ThisOrAnyChildHasTag(this BodyPartRecord part, string tag)
+        public static bool ThisOrAnyChildHasTag( this BodyPartRecord part, string tag )
         {
-            if (part.def.tags.Contains(tag))
+            if ( part?.def?.tags == null )
+                return false;
+
+            if ( part.def.tags.Contains( tag ) )
                 return true;
 
-            return part.parts.Any(p => p.ThisOrAnyChildHasTag(tag));
+            if ( part.parts.NullOrEmpty() )
+                return false;
+
+            return part.parts.Any( p => p.ThisOrAnyChildHasTag( tag ) );
         }
 
         #endregion Methods
