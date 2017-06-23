@@ -62,6 +62,7 @@
     <Compile Include="CapacityUtility.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="HarmonyPatches\DefGenerator_GenerateImpliedDefs_PreResolve.cs" />
+    <Compile Include="HarmonyPatches\LoadedLanguage_InjectIntoData.cs" />
     <Compile Include="MainTabWindow_Medical.cs" />
     <Compile Include="OptionalColumn.cs" />
     <Compile Include="PawnColumnDef_Capacity.cs" />
