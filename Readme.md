@@ -46,7 +46,7 @@ Parts of the code in this mod, and some content may be licensed by their origina
 # Are you enjoying my mods?
 Show your appreciation by buying me a coffee (or contribute towards a nice single malt).
 
-[![Buy Me a Coffee](https://az743702.vo.msecnd.net/cdn/kofi2.png?v=0)](https://ko-fi.com/A6123AL1)
+[![Buy Me a Coffee](undefined)](https://ko-fi.com/fluffymods)
 
 # Version
 This is version v0.17.1.7
