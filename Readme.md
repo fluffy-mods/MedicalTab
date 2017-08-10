@@ -43,5 +43,10 @@ All original content (e.g. text, imagery, sounds) in this mod is licensed under 
 
 Parts of the code in this mod, and some content may be licensed by their original authors. If this is the case, the original author & license will either be given in the source code, or be in a LICENSE file next to the content. Please do not decompile my mods, but use the original source code available on [GitHub](https://github.com/FluffierThanThou/MedicalTab/), so license information in the source code is preserved.
 
+# Are you enjoying my mods?
+Show your appreciation by buying me a coffee (or contribute towards a nice single malt).
+
+[![Buy Me a Coffee](https://az743702.vo.msecnd.net/cdn/kofi2.png?v=0)](https://ko-fi.com/A6123AL1)
+
 # Version
-This is version v0.17.1.6
+This is version v0.17.1.7
