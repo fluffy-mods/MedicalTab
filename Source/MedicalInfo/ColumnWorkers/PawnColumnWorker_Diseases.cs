@@ -13,38 +13,6 @@ namespace Fluffy
 {
     public class PawnColumnWorker_Diseases : PawnColumnWorker
     {
-        #region Structs
-
-        public struct DiseaseProgress
-        {
-            #region Fields
-
-            public float immunity;
-            public string label;
-            public float severity;
-
-            #endregion Fields
-
-            #region Methods
-
-            public static implicit operator DiseaseProgress( Hediff hediff )
-            {
-                var comp = hediff.TryGetComp<HediffComp_Immunizable>();
-                if ( comp == null )
-                    throw new NullReferenceException( $"hediff does not have immunizable comp" );
-
-                return new DiseaseProgress
-                       {
-                           label = hediff.Label,
-                           immunity = comp.Immunity,
-                           severity = hediff.Severity
-                       };
-            }
-
-            #endregion Methods
-        }
-
-        #endregion Structs
 
         #region Methods
 
@@ -55,7 +23,7 @@ namespace Fluffy
 
         public override void DoCell( Rect rect, Pawn pawn, PawnTable table )
         {
-            List<DiseaseProgress> diseases = GetDiseaseProgresses( pawn );
+            List<CapacityUtility.DiseaseProgress> diseases = pawn.GetDiseaseProgresses();
             var diseaseRect = new Rect( rect.xMin - Constants.IconSize / 2f,
                                         rect.yMin + ( rect.height - Constants.IconSize ) / 2f,
                                         Constants.IconSize, Constants.IconSize );
@@ -75,7 +43,7 @@ namespace Fluffy
             base.DoHeader( rect, table );
         }
 
-        public void DrawDiseaseIndicator( Rect rect, DiseaseProgress disease )
+        public void DrawDiseaseIndicator( Rect rect, CapacityUtility.DiseaseProgress disease )
         {
             // draw indicator
             GUI.DrawTexture( rect, Resources.DashCircle );
@@ -96,24 +64,12 @@ namespace Fluffy
                                           $"{disease.label}: severity; {disease.severity.ToStringPercent()}, immunity; {disease.immunity.ToStringPercent()}",
                                       rect.GetHashCode() );
         }
-
-        public List<DiseaseProgress> GetDiseaseProgresses( Pawn pawn )
-        {
-            return pawn.health.hediffSet.hediffs
-                       .Where(
-                              h =>
-                                  h.Visible && h.def.lethalSeverity > 0 &&
-                                  h.def.PossibleToDevelopImmunityNaturally() &&
-                                  h.TryGetComp<HediffComp_Immunizable>() != null )
-                       .Select( h => (DiseaseProgress) h )
-                       .ToList();
-        }
-
+        
         public override int GetMinWidth( PawnTable table ) { return Constants.StatColumnMinWidth; }
 
         public float GetValueToCompareTo( Pawn pawn )
         {
-            List<DiseaseProgress> diseases = GetDiseaseProgresses( pawn );
+            List<CapacityUtility.DiseaseProgress> diseases = pawn.GetDiseaseProgresses();
             if ( !diseases.Any() )
                 return -1;
 

@@ -17,6 +17,40 @@ namespace Fluffy
     [StaticConstructorOnStartup]
     public static class CapacityUtility
     {
+
+        #region Structs
+
+        public struct DiseaseProgress
+        {
+            #region Fields
+
+            public float immunity;
+            public string label;
+            public float severity;
+
+            #endregion Fields
+
+            #region Methods
+
+            public static implicit operator DiseaseProgress(Hediff hediff)
+            {
+                var comp = hediff.TryGetComp<HediffComp_Immunizable>();
+                if (comp == null)
+                    throw new NullReferenceException($"hediff does not have immunizable comp");
+
+                return new DiseaseProgress
+                {
+                    label = hediff.Label,
+                    immunity = comp.Immunity,
+                    severity = hediff.Severity
+                };
+            }
+
+            #endregion Methods
+        }
+
+        #endregion Structs
+
         #region Fields
 
         public static Dictionary<PawnCapacityDef, HashSet<string>> CapacityTags =
@@ -97,6 +131,32 @@ namespace Fluffy
         #endregion Constructors
 
         #region Methods
+
+
+        public static List<DiseaseProgress> GetDiseaseProgresses( this Pawn pawn)
+        {
+            return pawn.health.hediffSet.hediffs
+                .Where(
+                    h =>
+                        h.Visible && h.def.lethalSeverity > 0 &&
+                        h.def.PossibleToDevelopImmunityNaturally() &&
+                        h.TryGetComp<HediffComp_Immunizable>() != null)
+                .Select(h => (DiseaseProgress)h)
+                .ToList();
+        }
+
+        public static bool IsHealthy( this Pawn pawn )
+        {
+            if ( pawn.health.State != PawnHealthState.Mobile ||
+                pawn.health.summaryHealth.SummaryHealthPercent < 1f ||
+                pawn.health.hediffSet.BleedRateTotal > 0f ||
+                pawn.health.hediffSet.PainTotal > 0f ||
+                pawn.GetDiseaseProgresses().Any() ||
+                DefDatabase<PawnCapacityDef>.AllDefsListForReading
+                    .Any( cap => pawn.health.capacities.GetLevel( cap ) < 1f ) )
+                return false;
+            return true;
+        }
 
         public static List<FloatMenuOption> AddedPartOptionsThatAffect(this RecipeDef r, PawnCapacityDef capacity,
                                                                         Pawn pawn, bool negative = false)
