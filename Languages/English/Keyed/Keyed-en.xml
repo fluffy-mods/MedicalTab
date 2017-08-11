@@ -36,7 +36,7 @@
 
     <!-- filter  -->
     <MedicalTab.FilterHealthyOn>Showing only pawns that are not completely healthy\n\nClick to show all pawns.</MedicalTab.FilterHealthyOn>
-    <MedicalTab.FilterHealthyOn>Showing all pawns\n\nClick to show only pawns that are not completely healthy.</MedicalTab.FilterHealthyOn>
+    <MedicalTab.FilterHealthyOff>Showing all pawns\n\nClick to show only pawns that are not completely healthy.</MedicalTab.FilterHealthyOff>
 
     <!-- settings -->
     <MedicalTab.SuggestDrugs>Suggest administering drugs</MedicalTab.SuggestDrugs>
