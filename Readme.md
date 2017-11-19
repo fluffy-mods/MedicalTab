@@ -6,9 +6,6 @@ Adds a comprehensive medical overview tab, showing your colonists' health at a g
 Does not require a new save game 
 Can safely be enabled/disabled in ongoing saves. 
 
-# Note
-The medical tab was rebuild from the ground up for A17. That means many improvements, but possibly also some new bugs. Please let me know if you found any bugs, weird behaviours, or have a suggestion.
-
 # Features
 Shows vital medical statistics for Colonists, Animals, Prisoners, Visitors and Hostiles*.
 Medical care designation, including mass and default assignments
@@ -49,4 +46,4 @@ Show your appreciation by buying me a coffee (or contribute towards a nice singl
 [![Buy Me a Coffee](http://i.imgur.com/EjWiUwx.gif)](https://ko-fi.com/fluffymods)
 
 # Version
-This is version v0.18.0.1
+This is version v0.18.1.0
