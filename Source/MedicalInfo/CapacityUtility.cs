@@ -27,6 +27,7 @@ namespace Fluffy
             public float immunity;
             public string label;
             public float severity;
+            public bool tended;
 
             #endregion Fields
 
@@ -42,7 +43,8 @@ namespace Fluffy
                 {
                     label = hediff.Label,
                     immunity = comp.Immunity,
-                    severity = hediff.Severity
+                    severity = hediff.Severity,
+                    tended = !hediff.TendableNow
                 };
             }
 

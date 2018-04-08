@@ -46,6 +46,7 @@ namespace Fluffy
         public void DrawDiseaseIndicator( Rect rect, CapacityUtility.DiseaseProgress disease )
         {
             // draw indicator
+            GUI.color = disease.tended ? Color.white : Color.gray;
             GUI.DrawTexture( rect, Resources.DashCircle );
 
             // draw immunity
@@ -61,7 +62,7 @@ namespace Fluffy
             GUI.color = Color.white;
             TooltipHandler.TipRegion( rect,
                                       () =>
-                                          $"{disease.label}: severity; {disease.severity.ToStringPercent()}, immunity; {disease.immunity.ToStringPercent()}",
+                                      $"{disease.label}: severity; {disease.severity.ToStringPercent()}, immunity; {disease.immunity.ToStringPercent()}" + (disease.tended ? "" : ", needs tending"),
                                       rect.GetHashCode() );
         }
         
