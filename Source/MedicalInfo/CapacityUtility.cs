@@ -28,6 +28,7 @@ namespace Fluffy
             public string label;
             public float severity;
             public bool tended;
+            public int tillTendTicks;
 
             #endregion Fields
 
@@ -39,12 +40,17 @@ namespace Fluffy
                 if (comp == null)
                     throw new NullReferenceException($"hediff does not have immunizable comp");
 
+                int tillTendTicks = 0;
+                var tendComp = hediff.TryGetComp<HediffComp_TendDuration>();
+                if (tendComp != null)
+                    tillTendTicks = tendComp.tendTick + tendComp.TProps.tendDuration - Find.TickManager.TicksGame;
                 return new DiseaseProgress
                 {
                     label = hediff.Label,
                     immunity = comp.Immunity,
                     severity = hediff.Severity,
-                    tended = !hediff.TendableNow
+                    tended = !hediff.TendableNow,
+                    tillTendTicks = tillTendTicks
                 };
             }
 

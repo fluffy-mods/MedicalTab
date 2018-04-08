@@ -60,9 +60,11 @@ namespace Fluffy
             GUI.DrawTexture( diseaseProgressRect, Resources.Circle );
 
             GUI.color = Color.white;
+            string hoursStr = !disease.tended ? "NeedsTendingNow".Translate() :
+                "NextTendIn".Translate(new object[]{disease.tillTendTicks.ToStringTicksToPeriod()});
             TooltipHandler.TipRegion( rect,
                                       () =>
-                                      $"{disease.label}: severity; {disease.severity.ToStringPercent()}, immunity; {disease.immunity.ToStringPercent()}" + (disease.tended ? "" : ", needs tending"),
+                                      $"{disease.label}: severity; {disease.severity.ToStringPercent()}, immunity; {disease.immunity.ToStringPercent()}, {hoursStr}",
                                       rect.GetHashCode() );
         }
         
