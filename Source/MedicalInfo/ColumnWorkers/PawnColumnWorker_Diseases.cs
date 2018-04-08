@@ -59,13 +59,14 @@ namespace Fluffy
             GUI.color = new Color( 1f, .2f, .2f, Mathf.Lerp( .5f, 1f, disease.severity ) );
             GUI.DrawTexture( diseaseProgressRect, Resources.Circle );
 
+            string label = $"{disease.label}: severity; {disease.severity.ToStringPercent()}, immunity; {disease.immunity.ToStringPercent()}";
+            if (!disease.tended)
+                label += ", " + "NeedsTendingNow".Translate();
+            else if (disease.tillTendTicks > 0)
+                label += ", " + "NextTendIn".Translate(new object[] { disease.tillTendTicks.ToStringTicksToPeriod() });
+
             GUI.color = Color.white;
-            string hoursStr = !disease.tended ? "NeedsTendingNow".Translate() :
-                "NextTendIn".Translate(new object[]{disease.tillTendTicks.ToStringTicksToPeriod()});
-            TooltipHandler.TipRegion( rect,
-                                      () =>
-                                      $"{disease.label}: severity; {disease.severity.ToStringPercent()}, immunity; {disease.immunity.ToStringPercent()}, {hoursStr}",
-                                      rect.GetHashCode() );
+            TooltipHandler.TipRegion( rect, () => label, rect.GetHashCode() );
         }
         
         public override int GetMinWidth( PawnTable table ) { return Constants.StatColumnMinWidth; }

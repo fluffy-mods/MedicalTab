@@ -40,10 +40,11 @@ namespace Fluffy
                 if (comp == null)
                     throw new NullReferenceException($"hediff does not have immunizable comp");
 
-                int tillTendTicks = 0;
+                int tillTendTicks = -1;
                 var tendComp = hediff.TryGetComp<HediffComp_TendDuration>();
                 if (tendComp != null)
                     tillTendTicks = tendComp.tendTick + tendComp.TProps.tendDuration - Find.TickManager.TicksGame;
+
                 return new DiseaseProgress
                 {
                     label = hediff.Label,
