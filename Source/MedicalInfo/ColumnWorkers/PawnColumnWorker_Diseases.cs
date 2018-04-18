@@ -45,9 +45,6 @@ namespace Fluffy
 
         public void DrawDiseaseIndicator( Rect rect, CapacityUtility.DiseaseProgress disease )
         {
-            // draw indicator
-            GUI.DrawTexture( rect, Resources.DashCircle );
-
             // draw immunity
             Rect immunityRect = rect.ContractedBy( Mathf.Lerp( rect.width / 2f, 0f, disease.immunity ) );
             GUI.color = new Color( 1f, 1f, 1f, Mathf.Lerp( .5f, 1f, disease.immunity ) );
@@ -58,13 +55,20 @@ namespace Fluffy
             GUI.color = new Color( 1f, .2f, .2f, Mathf.Lerp( .5f, 1f, disease.severity ) );
             GUI.DrawTexture( diseaseProgressRect, Resources.Circle );
 
+            string label = $"{disease.label}: severity; {disease.severity.ToStringPercent()}, immunity; {disease.immunity.ToStringPercent()}";
+            if (!disease.tended)
+                label += ", " + "NeedsTendingNow".Translate();
+            else if (disease.tillTendTicks > 0)
+                label += ", " + "NextTendIn".Translate(new object[] { disease.tillTendTicks.ToStringTicksToPeriod() });
+
             GUI.color = Color.white;
-            TooltipHandler.TipRegion( rect,
-                                      () =>
-                                          $"{disease.label}: severity; {disease.severity.ToStringPercent()}, immunity; {disease.immunity.ToStringPercent()}",
-                                      rect.GetHashCode() );
+            TooltipHandler.TipRegion( rect, () => label, rect.GetHashCode() );
+
+            // draw indicator
+            GUI.color = disease.tended ? Color.white : Color.gray;
+            GUI.DrawTexture(rect, Resources.DashCircle);
         }
-        
+
         public override int GetMinWidth( PawnTable table ) { return Constants.StatColumnMinWidth; }
 
         public float GetValueToCompareTo( Pawn pawn )
