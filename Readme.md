@@ -26,9 +26,9 @@ Sort by everything
  - kPherox:	A16 update
  - Bronytamin:	
  - WNJStudio:	Updated chinese translation
- - Arex-rus:	
+ - Arex-rus:	Russian translation
  - mora145:	
- - Alex TD:	
+ - Alex TD:	Tweaks to disease progress icon
 
 # Think you found a bug? 
 Please read [this guide](http://steamcommunity.com/sharedfiles/filedetails/?id=725234314) before creating a bug report,
