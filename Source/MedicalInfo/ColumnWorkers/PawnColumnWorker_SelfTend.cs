@@ -51,9 +51,9 @@ namespace Fluffy
             {
                 SetValue(pawn, !GetValue(pawn));
                 if (GetValue(pawn))
-                    SoundDefOf.CheckboxTurnedOn.PlayOneShotOnCamera();
+                    SoundDefOf.Checkbox_TurnedOn.PlayOneShotOnCamera();
                 else
-                    SoundDefOf.CheckboxTurnedOff.PlayOneShotOnCamera();
+                    SoundDefOf.Checkbox_TurnedOff.PlayOneShotOnCamera();
             }
         }
 

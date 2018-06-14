@@ -40,18 +40,17 @@ namespace Fluffy
                 if (comp == null)
                     throw new NullReferenceException($"hediff does not have immunizable comp");
 
-                int tillTendTicks = -1;
-                var tendComp = hediff.TryGetComp<HediffComp_TendDuration>();
-                if (tendComp != null)
-                    tillTendTicks = tendComp.tendTick + tendComp.TProps.tendDuration - Find.TickManager.TicksGame;
+                //int tillTendTicks = -1;
+                //var tendComp = hediff.TryGetComp<HediffComp_TendDuration>();
+                //if (tendComp != null)
+                //    tillTendTicks = tendComp.tendTick + tendComp.TProps.tendDuration - Find.TickManager.TicksGame;
 
                 return new DiseaseProgress
                 {
                     label = hediff.Label,
                     immunity = comp.Immunity,
                     severity = hediff.Severity,
-                    tended = !hediff.TendableNow,
-                    tillTendTicks = tillTendTicks
+                    tended = !hediff.TendableNow()
                 };
             }
 
@@ -62,8 +61,8 @@ namespace Fluffy
 
         #region Fields
 
-        public static Dictionary<PawnCapacityDef, HashSet<string>> CapacityTags =
-            new Dictionary<PawnCapacityDef, HashSet<string>>();
+        public static Dictionary<PawnCapacityDef, HashSet<BodyPartTagDef>> CapacityTags =
+            new Dictionary<PawnCapacityDef, HashSet<BodyPartTagDef>>();
 
         private static MethodInfo _generateSurgeryOptionMethodInfo;
 
@@ -73,56 +72,60 @@ namespace Fluffy
 
         static CapacityUtility()
         {
-            var filtrationTags = new HashSet<string>();
-            filtrationTags.Add("BloodFiltrationKidney");
-            filtrationTags.Add("BloodFiltrationSource");
-            filtrationTags.Add("BloodFiltrationLiver");
+            var filtrationTags = new HashSet<BodyPartTagDef>();
+            filtrationTags.Add(BodyPartTagDefOf.BloodFiltrationKidney);
+            filtrationTags.Add(BodyPartTagDefOf.BloodFiltrationLiver);
+            filtrationTags.Add(BodyPartTagDefOf.BloodFiltrationSource);
             CapacityTags.Add(PawnCapacityDefOf.BloodFiltration, filtrationTags);
 
-            var pumpingTags = new HashSet<string>();
-            pumpingTags.Add("BloodPumpingSource");
+            var pumpingTags = new HashSet<BodyPartTagDef>();
+            pumpingTags.Add(BodyPartTagDefOf.BloodPumpingSource);
             CapacityTags.Add(PawnCapacityDefOf.BloodPumping, pumpingTags);
 
-            var breathingTags = new HashSet<string>();
-            breathingTags.Add("BreathingSource");
+            var breathingTags = new HashSet<BodyPartTagDef>();
+            breathingTags.Add(BodyPartTagDefOf.BreathingPathway);
+            breathingTags.Add(BodyPartTagDefOf.BreathingSource);
+            breathingTags.Add(BodyPartTagDefOf.BreathingSourceCage);
             CapacityTags.Add(PawnCapacityDefOf.Breathing, breathingTags);
 
-            var consciousnessTags = new HashSet<string>();
-            consciousnessTags.Add("ConsciousnessSource");
+            var consciousnessTags = new HashSet<BodyPartTagDef>();
+            consciousnessTags.Add(BodyPartTagDefOf.ConsciousnessSource);
             CapacityTags.Add(PawnCapacityDefOf.Consciousness, consciousnessTags);
 
-            var eatingTags = new HashSet<string>();
-            eatingTags.Add("EatingSource");
+            var eatingTags = new HashSet<BodyPartTagDef>();
+            eatingTags.Add(BodyPartTagDefOf.EatingPathway);
+            eatingTags.Add(BodyPartTagDefOf.EatingSource);
             CapacityTags.Add(PawnCapacityDefOf.Eating, eatingTags);
 
-            var hearingTags = new HashSet<string>();
-            hearingTags.Add("HearingSource");
+            var hearingTags = new HashSet<BodyPartTagDef>();
+            hearingTags.Add(BodyPartTagDefOf.HearingSource);
             CapacityTags.Add(PawnCapacityDefOf.Hearing, hearingTags);
 
-            var manipulationTags = new HashSet<string>();
-            manipulationTags.Add("ManipulationLimbCore");
-            manipulationTags.Add("ManipulationLimbSegment");
-            manipulationTags.Add("ManipulationLimbDigit");
+            var manipulationTags = new HashSet<BodyPartTagDef>();
+            manipulationTags.Add(BodyPartTagDefOf.ManipulationLimbCore);
+            manipulationTags.Add(BodyPartTagDefOf.ManipulationLimbDigit);
+            manipulationTags.Add(BodyPartTagDefOf.ManipulationLimbSegment);
             CapacityTags.Add(PawnCapacityDefOf.Manipulation, manipulationTags);
 
-            var metabolismTags = new HashSet<string>();
-            metabolismTags.Add("MetabolismSource");
+            var metabolismTags = new HashSet<BodyPartTagDef>();
+            metabolismTags.Add( BodyPartTagDefOf.MetabolismSource);
             CapacityTags.Add(PawnCapacityDefOf.Metabolism, metabolismTags);
 
-            var movingTags = new HashSet<string>();
-            movingTags.Add("MovingLimbCore");
-            movingTags.Add("MovingLimbSegment");
-            movingTags.Add("MovingLimbDigit");
-            movingTags.Add("Pelvis");
-            movingTags.Add("Spine");
+            var movingTags = new HashSet<BodyPartTagDef>();
+            movingTags.Add(BodyPartTagDefOf.MovingLimbCore);
+            movingTags.Add(BodyPartTagDefOf.MovingLimbDigit);
+            movingTags.Add(BodyPartTagDefOf.MovingLimbSegment);
+            movingTags.Add(BodyPartTagDefOf.Pelvis);
+            movingTags.Add(BodyPartTagDefOf.Spine);
             CapacityTags.Add(PawnCapacityDefOf.Moving, movingTags);
 
-            var sightTags = new HashSet<string>();
-            sightTags.Add("SightSource");
+            var sightTags = new HashSet<BodyPartTagDef>();
+            sightTags.Add(BodyPartTagDefOf.SightSource);
             CapacityTags.Add(PawnCapacityDefOf.Sight, sightTags);
 
-            var talkingTags = new HashSet<string>();
-            talkingTags.Add("TalkingSource");
+            var talkingTags = new HashSet<BodyPartTagDef>();
+            talkingTags.Add(BodyPartTagDefOf.TalkingPathway);
+            talkingTags.Add(BodyPartTagDefOf.TalkingSource);
             CapacityTags.Add(PawnCapacityDefOf.Talking, talkingTags);
 
             // try and make an educated guess for any other capacity added by mods
@@ -131,9 +134,39 @@ namespace Fluffy
                 if (CapacityTags.ContainsKey(capacityDef))
                     continue;
 
-                var tags = new HashSet<string>();
-                tags.Add(capacityDef.LabelCap + "Source");
+                var tags = new HashSet<BodyPartTagDef>();
+                foreach ( var tag in DefDatabase<BodyPartTagDef>.AllDefsListForReading.Where(
+                    td => td.defName.Contains( capacityDef.defName )
+                ) )
+                {
+                    Log.Message( $"Medical Tab :: Adding {tag.defName} to the list of required capacities for {capacityDef.defName}." );
+                    tags.Add( tag );
+                }
+
+                if ( tags.Count == 0 )
+                {
+                    Log.Warning( $"Medical Tab :: Capacity {capacityDef.defName} does not have any bodyPartTags associated with it." );
+                }
                 CapacityTags.Add(capacityDef, tags);
+            }
+            
+            // spawn a message about orphan tags
+            foreach ( var tag in DefDatabase<BodyPartTagDef>.AllDefsListForReading )
+            {
+                var used = false;
+                foreach ( var tagset in CapacityTags.Values )
+                {
+                    if ( tagset.Contains( tag ) )
+                    {
+                        used = true;
+                        break;
+                    }
+                }
+
+                if ( !used )
+                {
+                    Log.Warning( $"Medical Tab :: Tag {tag.defName} is not associated with any pawnCapacity." );
+                }
             }
         }
 
@@ -302,8 +335,7 @@ namespace Fluffy
 
         public static bool NotMissingVitalIngredient(Pawn pawn, RecipeDef r)
         {
-            return !r.PotentiallyMissingIngredients(null, pawn.Map)
-                     .Any(td => td.IsDrug || td.isBodyPartOrImplant);
+            return !r.PotentiallyMissingIngredients( null, pawn.Map ).Any();
         }
 
         public static bool ReducesPainOnIngestion(this ThingDef def)
@@ -313,7 +345,7 @@ namespace Fluffy
                    .Any(od => od.hediffDef.IsHediffThatReducesPain()) ?? false;
         }
 
-        public static bool ThisOrAnyChildHasTag( this BodyPartRecord part, string tag )
+        public static bool ThisOrAnyChildHasTag( this BodyPartRecord part, BodyPartTagDef tag )
         {
             if ( part?.def?.tags == null )
                 return false;

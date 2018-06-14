@@ -46,23 +46,23 @@ namespace Fluffy
             switch (MainTabWindow_Medical.Instance.Source)
             {
                 case SourceType.Animals:
-                    MedicalCareUtility.MedicalCareSetter(rect, ref Find.World.settings.defaultCareForColonyAnimal);
+                    MedicalCareUtility.MedicalCareSetter(rect, ref Find.PlaySettings.defaultCareForColonyAnimal);
                     break;
 
                 case SourceType.Colonists:
-                    MedicalCareUtility.MedicalCareSetter(rect, ref Find.World.settings.defaultCareForColonyHumanlike);
+                    MedicalCareUtility.MedicalCareSetter(rect, ref Find.PlaySettings.defaultCareForColonyHumanlike);
                     break;
 
                 case SourceType.Hostiles:
-                    MedicalCareUtility.MedicalCareSetter(rect, ref Find.World.settings.defaultCareForHostileFaction);
+                    MedicalCareUtility.MedicalCareSetter(rect, ref Find.PlaySettings.defaultCareForHostileFaction);
                     break;
 
                 case SourceType.Prisoners:
-                    MedicalCareUtility.MedicalCareSetter(rect, ref Find.World.settings.defaultCareForColonyPrisoner);
+                    MedicalCareUtility.MedicalCareSetter(rect, ref Find.PlaySettings.defaultCareForColonyPrisoner);
                     break;
 
                 case SourceType.Visitors:
-                    MedicalCareUtility.MedicalCareSetter(rect, ref Find.World.settings.defaultCareForNeutralFaction);
+                    MedicalCareUtility.MedicalCareSetter(rect, ref Find.PlaySettings.defaultCareForNeutralFaction);
                     break;
             }
         }

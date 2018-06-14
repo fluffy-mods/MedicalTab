@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
-  <PawnTableDef>
+  <DynamicPawnTable.DynamicPawnTableDef>
     <defName>Medical</defName>
     <columns>
       <li>Label</li>
@@ -14,6 +14,6 @@
       <li>Pain</li>
       <li>RemainingSpace</li>
     </columns>
-  </PawnTableDef>
+  </DynamicPawnTable.DynamicPawnTableDef>
 
   </Defs>

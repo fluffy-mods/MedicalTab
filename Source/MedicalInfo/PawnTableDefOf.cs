@@ -2,18 +2,17 @@
 // PawnTableDefOf.cs
 // 2017-05-14
 
+using DynamicPawnTable;
 using RimWorld;
-using UnityEngine;
-using Verse;
 
 namespace Fluffy
 {
     [DefOf]
-    public class PawnTableDefOf
+    public class DynamicPawnTableDefOf
     {
         #region Fields
 
-        public static PawnTableDef Medical;
+        public static DynamicPawnTableDef Medical;
 
         #endregion Fields
     }

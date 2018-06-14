@@ -33,9 +33,6 @@
     <Reference Include="0Harmony">
       <HintPath>..\..\..\..\harmony\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="harmonycheck">
-      <HintPath>..\..\..\..\harmony\harmonycheck.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\..\..\Games\steamapps\common\RimWorld\RimWorldWin_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
@@ -70,6 +67,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.cs" />
     <Compile Include="Settings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\DynamicPawnTable\DynamicPawnTable\DynamicPawnTable.csproj">
+      <Project>{e93b85a6-eeff-4bde-a6f4-cce6d3487f9a}</Project>
+      <Name>DynamicPawnTable</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using DynamicPawnTable;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -88,11 +90,11 @@ namespace Fluffy
                 switch ( Source )
                 {
                     case SourceType.Colonists:
-                        pawns = Find.VisibleMap.mapPawns.FreeColonists;
+                        pawns = Find.CurrentMap.mapPawns.FreeColonists;
                         break;
 
                     case SourceType.Animals:
-                        pawns = Find.VisibleMap.mapPawns
+                        pawns = Find.CurrentMap.mapPawns
                             .PawnsInFaction( Faction.OfPlayer )
                             .Where( p => p.RaceProps.Animal )
                             .OrderByDescending( p => p.RaceProps.petness )
@@ -101,25 +103,25 @@ namespace Fluffy
                         break;
 
                     case SourceType.Prisoners:
-                        pawns = Find.VisibleMap.mapPawns.PrisonersOfColony;
+                        pawns = Find.CurrentMap.mapPawns.PrisonersOfColony;
                         break;
 
                     case SourceType.Hostiles:
-                        pawns = Find.VisibleMap.mapPawns
+                        pawns = Find.CurrentMap.mapPawns
                             .AllPawnsSpawned
                             .Where( p => p.RaceProps.Humanlike &&
                                          p.Faction.HostileTo( Faction.OfPlayer ) &&
                                          ( Settings.ShowAllHostiles || p.health.Downed ) &&
-                                         !Find.VisibleMap.fogGrid.IsFogged( p.PositionHeld ) );
+                                         !Find.CurrentMap.fogGrid.IsFogged( p.PositionHeld ) );
                         break;
 
                     case SourceType.Visitors:
-                        pawns = Find.VisibleMap.mapPawns
+                        pawns = Find.CurrentMap.mapPawns
                             .AllPawnsSpawned
                             .Where( p => p.RaceProps.Humanlike &&
                                          p.Faction != Faction.OfPlayer &&
                                          !p.Faction.HostileTo( Faction.OfPlayer ) &&
-                                         !Find.VisibleMap.fogGrid.IsFogged( p.PositionHeld ) );
+                                         !Find.CurrentMap.fogGrid.IsFogged( p.PositionHeld ) );
                         break;
 
                     default:
@@ -134,7 +136,7 @@ namespace Fluffy
             }
         }
 
-        protected override PawnTableDef PawnTableDef => PawnTableDefOf.Medical;
+        protected override PawnTableDef PawnTableDef => DynamicPawnTableDefOf.Medical;
 
         #endregion Properties
 
@@ -175,10 +177,9 @@ namespace Fluffy
 
         private void RebuildTable()
         {
-            var columns =
-                PawnTableDef.columns.Where( c => ( c.Worker as OptionalColumn )?.ShowFor( Source ) ?? true );
-            Table = new PawnTable( columns, () => Pawns, 998, UI.screenWidth - (int) ( Margin * 2f ), 0,
-                (int) ( UI.screenHeight - 35 - ExtraBottomSpace - ExtraTopSpace - Margin * 2f ) );
+            DefDatabase<DynamicPawnTableDef>.GetNamed( "Example" ).Select( (x) => true );
+            DynamicPawnTableDefOf.Medical.Select( c => ( c.Worker as OptionalColumn )?.ShowFor( Source ) ?? true );
+            Table = new PawnTable( DynamicPawnTableDefOf.Medical, () => Pawns, UI.screenWidth - (int) ( Margin * 2f ), ( int )( UI.screenHeight - 35 - ExtraBottomSpace - ExtraTopSpace - Margin * 2f )  );
         }
 
         #endregion Methods

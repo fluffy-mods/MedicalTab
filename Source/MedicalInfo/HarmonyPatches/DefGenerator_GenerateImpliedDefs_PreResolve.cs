@@ -2,6 +2,7 @@
 // DefGenerator_GenerateImpliedDefs_PreResolve.cs
 // 2017-05-16
 
+using DynamicPawnTable;
 using Harmony;
 using RimWorld;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace Fluffy
         public static void Postfix()
         {
             var moveLabelDown = false;
-            PawnTableDef medicalTable = PawnTableDefOf.Medical;
+            DynamicPawnTableDef medicalTable = DynamicPawnTableDefOf.Medical;
 
             foreach (PawnCapacityDef capacity in DefDatabase<PawnCapacityDef>.AllDefsListForReading)
             {
