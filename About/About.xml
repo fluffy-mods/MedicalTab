@@ -3,7 +3,7 @@
   <name>Medical Tab</name>
   <author>Fluffy</author>
   <url/>
-  <targetVersion>1.0.1970</targetVersion>
+  <targetVersion>0.19.1987</targetVersion>
   <description>Adds a comprehensive medical overview tab, showing your colonists’ health at a glance. 
 
 &lt;size=24&gt;Important&lt;/size&gt;
@@ -36,7 +36,7 @@ mora145:
 Alex TD:    Tweaks to disease progress icon
 
 &lt;size=24&gt;Version&lt;/size&gt;
-This is version 1.9.38, for RimWorld 1.0.1970.
+This is version 1.10.41, for RimWorld 0.19.1987.
 
 </description>
 </ModMetaData>
