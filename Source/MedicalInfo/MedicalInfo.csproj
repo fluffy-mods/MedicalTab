@@ -31,10 +31,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\..\..\..\harmony\0Harmony.dll</HintPath>
+      <HintPath>..\..\..\..\..\harmony\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\dlls\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\..\..\dlls\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -44,7 +44,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\..\dlls\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\..\..\dlls\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -69,7 +69,7 @@
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\DynamicPawnTable\DynamicPawnTable\DynamicPawnTable.csproj">
+    <ProjectReference Include="..\..\..\..\TOOLS\DynamicPawnTable\DynamicPawnTable\DynamicPawnTable.csproj">
       <Project>{e93b85a6-eeff-4bde-a6f4-cce6d3487f9a}</Project>
       <Name>DynamicPawnTable</Name>
     </ProjectReference>
