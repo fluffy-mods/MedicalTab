@@ -1,386 +1,186 @@
-﻿using System.Collections.Generic;
+﻿// Karel Kroeze
+// MainTabWindow_Medical.cs
+// 2017-05-14
+
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using DynamicPawnTable;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace Fluffy
 {
-    public class MainTabWindow_Medical : MainTabWindow_PawnList
+    public enum SourceType
     {
-        public enum Order
+        Colonists,
+        Animals,
+        Prisoners,
+        Visitors,
+        Hostiles
+    }
+
+    public class MainTabWindow_Medical : MainTabWindow_PawnTable
+    {
+        #region Fields
+
+        private static readonly FieldInfo _tableFieldInfo;
+        private static bool _filterHealthy;
+        private SourceType _source = SourceType.Colonists;
+
+        #endregion Fields
+
+        #region Constructors
+
+        static MainTabWindow_Medical()
         {
-            Name,
-            Care,
-            BleedRate,
-            Operations,
-            Efficiency
+            _tableFieldInfo = typeof( MainTabWindow_PawnTable ).GetField( "table",
+                BindingFlags.Instance | BindingFlags.NonPublic );
+            if ( _tableFieldInfo == null )
+                throw new NullReferenceException( "table field not found!" );
         }
 
-        public enum SourceOptions
+        public MainTabWindow_Medical()
         {
-            Colonists,
-            Prisoners,
-            Animals
+            Instance = this;
         }
 
-        protected const float LabelRowHeight = 50f;
+        #endregion Constructors
 
-        public static bool IsDirty;
+        #region Properties
 
-        public bool Asc = true;
+        public static MainTabWindow_Medical Instance { get; private set; }
 
-        public List<PawnCapacityDef> CapDefs =
-            DefDatabase<PawnCapacityDef>.AllDefsListForReading.Where( x => x.showOnHumanlikes ).ToList( );
-
-        public Order OrderBy = Order.Name;
-
-        public PawnCapacityDef OrderByCapDef = PawnCapacityDefOf.Consciousness;
-
-        public SourceOptions Source = SourceOptions.Colonists;
-
-        public override Vector2 RequestedTabSize => new Vector2( 1050f, 90f + PawnsCount * 30f + 65f );
-        
-        protected override void BuildPawnList( )
+        public SourceType Source
         {
-            pawns.Clear( );
-
-            IEnumerable<Pawn> tempPawns;
-
-            switch ( Source )
+            get => _source;
+            private set
             {
-                case SourceOptions.Prisoners:
-                    tempPawns = Find.MapPawns.PrisonersOfColony;
-                    break;
-                case SourceOptions.Animals:
-                    tempPawns =
-                        Find.MapPawns.AllPawnsSpawned.Where(a => a.RaceProps.Animal && a.Faction == Faction.OfPlayer);
-                    break;
-                case SourceOptions.Colonists:
-                default:
-                    tempPawns = Find.MapPawns.FreeColonists;
-                    break;
+                _source = value;
+                RebuildTable();
             }
+        }
 
-            switch ( OrderBy )
+        public PawnTable Table
+        {
+            get => _tableFieldInfo.GetValue( this ) as PawnTable;
+            private set => _tableFieldInfo.SetValue( this, value );
+        }
+
+        public static bool FilterHealthy
+        {
+            get => _filterHealthy;
+            set
             {
-                case Order.Care:
-                    pawns = ( from p in tempPawns
-                              orderby p.playerSettings.medCare ascending
-                              select p ).ToList( );
-                    break;
-                case Order.BleedRate:
-                    pawns = ( from p in tempPawns
-                              orderby p.health.hediffSet.BleedingRate
-                              select p ).ToList( );
-                    break;
-                case Order.Operations:
-                    pawns = ( from p in tempPawns
-                              orderby p.BillStack.Count
-                              select p ).ToList( );
-                    break;
-                case Order.Efficiency:
-                    pawns = ( from p in tempPawns
-                              orderby p.health.capacities.GetEfficiency( OrderByCapDef ) descending
-                              select p ).ToList( );
-                    break;
-                default:
-                    pawns = ( from p in tempPawns
-                              orderby p.LabelCap ascending
-                              select p ).ToList( );
-                    break;
+                if ( _filterHealthy == value )
+                    return;
+                _filterHealthy = value;
+                Instance.RebuildTable();
             }
+        }
 
-            if ( !Asc )
+        protected override IEnumerable<Pawn> Pawns
+        {
+            get
             {
-                pawns.Reverse( );
-            }
+                IEnumerable<Pawn> pawns;
+                switch ( Source )
+                {
+                    case SourceType.Colonists:
+                        pawns = Find.CurrentMap.mapPawns.FreeColonists;
+                        break;
 
-            IsDirty = false;
+                    case SourceType.Animals:
+                        pawns = Find.CurrentMap.mapPawns
+                            .PawnsInFaction( Faction.OfPlayer )
+                            .Where( p => p.RaceProps.Animal )
+                            .OrderByDescending( p => p.RaceProps.petness )
+                            .ThenBy( p => p.RaceProps.baseBodySize )
+                            .ThenBy( p => p.def.label );
+                        break;
+
+                    case SourceType.Prisoners:
+                        pawns = Find.CurrentMap.mapPawns.PrisonersOfColony;
+                        break;
+
+                    case SourceType.Hostiles:
+                        pawns = Find.CurrentMap.mapPawns
+                            .AllPawnsSpawned
+                            .Where( p => p.RaceProps.Humanlike &&
+                                         p.Faction.HostileTo( Faction.OfPlayer ) &&
+                                         ( Settings.ShowAllHostiles || p.health.Downed ) &&
+                                         !Find.CurrentMap.fogGrid.IsFogged( p.PositionHeld ) );
+                        break;
+
+                    case SourceType.Visitors:
+                        pawns = Find.CurrentMap.mapPawns
+                            .AllPawnsSpawned
+                            .Where( p => p.RaceProps.Humanlike &&
+                                         p.Faction != Faction.OfPlayer &&
+                                         !p.Faction.HostileTo( Faction.OfPlayer ) &&
+                                         !Find.CurrentMap.fogGrid.IsFogged( p.PositionHeld ) );
+                        break;
+
+                    default:
+                        pawns = base.Pawns;
+                        break;
+                }
+
+                if ( _filterHealthy )
+                    pawns = pawns.Where( p => !p.IsHealthy() );
+
+                return pawns;
+            }
+        }
+
+        protected override PawnTableDef PawnTableDef => DynamicPawnTableDefOf.Medical;
+
+        #endregion Properties
+
+        #region Methods
+
+        public void DoSourceSelectionButton( Rect rect )
+        {
+            // apparently, font size going to tiny on fully zooming in is working as designed...
+            Text.Font = GameFont.Small;
+            if ( Widgets.ButtonText( rect, Source.ToString().Translate() ) )
+            {
+                var options = new List<FloatMenuOption>();
+
+                foreach ( var sourceOption in Enum.GetValues( typeof( SourceType ) ).OfType<SourceType>() )
+                    if ( sourceOption != Source )
+                        options.Add( new FloatMenuOption( sourceOption.ToString().Translate(),
+                            delegate { Source = sourceOption; } ) );
+
+                Find.WindowStack.Add( new FloatMenu( options ) );
+            }
+        }
+
+        public void DoFilterHealthyButton( Rect rect )
+        {
+            TooltipHandler.TipRegion( rect,
+                FilterHealthy ? "MedicalTab.FilterHealthyOn".Translate() : "MedicalTab.FilterHealthyOff".Translate() );
+            if ( Widgets.ButtonImage( rect, FilterHealthy ? Resources.HealthyFilterOn : Resources.HealthyFilterOff, FilterHealthy ? GenUI.MouseoverColor : Color.white,
+                FilterHealthy ? Color.white : GenUI.MouseoverColor ) )
+                FilterHealthy = !FilterHealthy;
         }
 
         public override void DoWindowContents( Rect rect )
         {
+            DoSourceSelectionButton( new Rect( rect.xMin, rect.yMin, 120f, 30f ) );
+            DoFilterHealthyButton( new Rect( rect.xMin + 120f + 6f, rect.yMin, 30f, 30f ) );
             base.DoWindowContents( rect );
-
-            if ( IsDirty )
-            {
-                BuildPawnList( );
-            }
-            var position = new Rect( 0f, 0f, rect.width, 80f );
-            GUI.BeginGroup( position );
-
-            var x = 0f;
-            Text.Font = GameFont.Small;
-
-            // prisoner / colonist / Animal toggle
-            var sourceButton = new Rect( 0f, 0f, 200f, 35f );
-            if ( Widgets.ButtonText( sourceButton, Source.ToString().Translate( ) ) )
-            {
-                List<FloatMenuOption> options = new List<FloatMenuOption>();
-                if (Source != SourceOptions.Colonists)
-                    options.Add( new FloatMenuOption( "Colonists".Translate(), delegate {
-                        Source = SourceOptions.Colonists;
-                        IsDirty = true;
-                    }));
-
-                if (Source != SourceOptions.Prisoners)
-                    options.Add( new FloatMenuOption( "Prisoners".Translate(), delegate {
-                        Source = SourceOptions.Prisoners;
-                        IsDirty = true;
-                    }));
-
-                if (Source != SourceOptions.Animals)
-                    options.Add( new FloatMenuOption( "Animals".Translate(), delegate {
-                        Source = SourceOptions.Animals;
-                        IsDirty = true;
-                    }));
-
-                Find.WindowStack.Add(new FloatMenu(options));
-            }
-
-            // name
-            var nameLabel = new Rect( x, 50f, 175f, 30f );
-            Text.Anchor = TextAnchor.LowerCenter;
-            Widgets.Label( nameLabel, "FluffyMedical.Name".Translate( ) );
-            if ( Widgets.ButtonInvisible( nameLabel ) )
-            {
-                if ( OrderBy == Order.Name )
-                {
-                    Asc = !Asc;
-                }
-                else
-                {
-                    OrderBy = Order.Name;
-                    Asc = true;
-                }
-                IsDirty = true;
-            }
-            TooltipHandler.TipRegion( nameLabel,
-                                      "FluffyMedical.ClickToSortBy".Translate( "FluffyMedical.Name".Translate( ) ) );
-            Widgets.DrawHighlightIfMouseover( nameLabel );
-            x += 175f;
-
-            // care
-            var careLabel = new Rect( x, 50f, 100f, 30f );
-            Widgets.Label( careLabel, "FluffyMedical.Care".Translate( ) );
-            if ( Widgets.ButtonInvisible( careLabel ) )
-            {
-                if ( Event.current.shift )
-                {
-                    Utility_Medical.MedicalCareSetterAll( pawns );
-                }
-                else
-                {
-                    if ( OrderBy == Order.Care )
-                    {
-                        Asc = !Asc;
-                    }
-                    else
-                    {
-                        OrderBy = Order.Care;
-                        Asc = true;
-                    }
-                    IsDirty = true;
-                }
-            }
-            TooltipHandler.TipRegion( careLabel,
-                                      "FluffyMedical.ClickToSortBy".Translate( "FluffyMedical.Care".Translate( ) ) +
-                                      "\n" +
-                                      "FluffyMedical.ShiftClickTo".Translate( "FluffyMedical.SetCare".Translate( ) ) );
-            Widgets.DrawHighlightIfMouseover( careLabel );
-            x += 100f;
-
-            // bloodloss
-            var bloodLabel = new Rect( x, 50f, 50f, 30f );
-            var bloodIcon = new Rect( x + 17f, 60f, 16f, 16f );
-            GUI.DrawTexture( bloodIcon, Utility_Medical.BloodTextureWhite );
-            if ( Widgets.ButtonInvisible( bloodLabel ) )
-            {
-                if ( OrderBy == Order.BleedRate )
-                {
-                    Asc = !Asc;
-                }
-                else
-                {
-                    OrderBy = Order.BleedRate;
-                    Asc = true;
-                }
-                IsDirty = true;
-            }
-            TooltipHandler.TipRegion( bloodLabel, "FluffyMedical.ClickToSortBy".Translate( "BleedingRate".Translate( ) ) );
-            Widgets.DrawHighlightIfMouseover( bloodLabel );
-            x += 50f;
-
-            // Operations
-            var opLabel = new Rect( x, 50f, 50f, 30f );
-            var opIcon = new Rect( x + 17f, 60f, 16f, 16f );
-            GUI.DrawTexture( opIcon, Utility_Medical.OpTexture );
-            if ( Widgets.ButtonInvisible( opLabel ) )
-            {
-                if ( OrderBy == Order.Operations )
-                {
-                    Asc = !Asc;
-                }
-                else
-                {
-                    OrderBy = Order.Operations;
-                    Asc = true;
-                }
-                IsDirty = true;
-            }
-            TooltipHandler.TipRegion( opLabel,
-                                      "FluffyMedical.ClickToSortBy".Translate(
-                                          "FluffyMedical.CurrentOperations".Translate( ) ) );
-            Widgets.DrawHighlightIfMouseover( opLabel );
-            x += 50f;
-
-            var offset = true;
-
-            // extra 15f offset for... what? makes labels roughly align.
-            var colWidth = ( rect.width - x - 15f ) / CapDefs.Count;
-            for ( var i = 0; i < CapDefs.Count; i++ )
-            {
-                var defLabel = new Rect( x + colWidth * i - colWidth / 2, 10f + ( offset ? 10f : 40f ), colWidth * 2,
-                                         30f );
-                Widgets.DrawLine( new Vector2( x + colWidth * ( i + 1 ) - colWidth / 2, 40f + ( offset ? 5f : 35f ) ),
-                                  new Vector2( x + colWidth * ( i + 1 ) - colWidth / 2, 80f ), Color.gray, 1 );
-                Widgets.Label( defLabel, CapDefs[i].LabelCap );
-                if ( Widgets.ButtonInvisible( defLabel ) )
-                {
-                    if ( OrderBy == Order.Efficiency && OrderByCapDef == CapDefs[i] )
-                    {
-                        Asc = !Asc;
-                    }
-                    else
-                    {
-                        OrderBy = Order.Efficiency;
-                        OrderByCapDef = CapDefs[i];
-                        Asc = true;
-                    }
-                    IsDirty = true;
-                }
-                TooltipHandler.TipRegion( defLabel, "FluffyMedical.ClickToSortBy".Translate( CapDefs[i].LabelCap ) );
-                Widgets.DrawHighlightIfMouseover( defLabel );
-
-                offset = !offset;
-            }
-
-            GUI.EndGroup( );
-
-            var content = new Rect( 0f, position.yMax, rect.width, rect.height - position.yMax );
-            GUI.BeginGroup( content );
-            DrawRows( new Rect( 0f, 0f, content.width, content.height ) );
-            GUI.EndGroup( );
         }
 
-        /// <summary>
-        /// creates a new square of size in the center of rect.
-        /// </summary>
-        /// <param name="rect"></param>
-        /// <param name="size"></param>
-        /// <returns></returns>
-        public static Rect Inner( Rect rect, float size )
+        private void RebuildTable()
         {
-            return new Rect( rect.xMin + ( rect.width - size ) / 2, rect.yMin + ( rect.height - size ) / 2, size, size );
+            DynamicPawnTableDefOf.Medical.Select( c => ( c.Worker as OptionalColumn )?.ShowFor( Source ) ?? true );
+            Table = new PawnTable( DynamicPawnTableDefOf.Medical, () => Pawns, UI.screenWidth - (int) ( Margin * 2f ), ( int )( UI.screenHeight - 35 - ExtraBottomSpace - ExtraTopSpace - Margin * 2f )  );
         }
 
-        protected override void DrawPawnRow( Rect rect, Pawn p )
-        {
-            // name is handled in PreDrawRow, start at 175
-            var x = 175f;
-            var y = rect.yMin;
-
-            // care
-            var careRect = new Rect( x, y, 100f, 30f );
-            Utility_Medical.MedicalCareSetter( careRect, ref p.playerSettings.medCare );
-            x += 100f;
-
-            // blood
-            var bloodRect = new Rect( x, y, 50f, 30f );
-            var bleedRate = p.health.hediffSet.BleedingRate; // float in range 0 - 1
-            float iconSize;
-            if ( bleedRate < 0.01f )
-            {
-                iconSize = 0f;
-            }
-            else if ( bleedRate < .1f )
-            {
-                iconSize = 8f;
-            }
-            else if ( bleedRate < .3f )
-            {
-                iconSize = 16f;
-            }
-            else
-            {
-                iconSize = 24f;
-            }
-            var iconRect = Inner( bloodRect, iconSize );
-            GUI.DrawTexture( iconRect, Utility_Medical.BloodTexture );
-            TooltipHandler.TipRegion( bloodRect,
-                                      "BleedingRate".Translate( ) + ": " + bleedRate.ToStringPercent( ) + "/" +
-                                      "LetterDay".Translate( ) );
-            Widgets.DrawHighlightIfMouseover( bloodRect );
-            x += 50f;
-
-            // Operations
-            var opLabel = new Rect( x, y, 50f, 30f );
-            if ( Widgets.ButtonInvisible( opLabel ) )
-            {
-                if ( Event.current.button == 0 )
-                {
-                    Utility_Medical.RecipeOptionsMaker( p );
-                }
-                else if ( Event.current.button == 1 )
-                {
-                    p.BillStack.Clear( );
-                }
-            }
-            var opLabelString = new StringBuilder( );
-            opLabelString.AppendLine( "FluffyMedical.ClickTo".Translate( "FluffyMedical.ScheduleOperation".Translate( ) ) );
-            opLabelString.AppendLine(
-                "FluffyMedical.RightClickTo".Translate( "FluffyMedical.UnScheduleOperations".Translate( ) ) );
-            opLabelString.AppendLine( );
-            opLabelString.AppendLine( "FluffyMedical.ScheduledOperations".Translate( ) );
-
-            var opScheduled = false;
-            foreach ( var op in p.BillStack )
-            {
-                opLabelString.AppendLine( op.LabelCap );
-                opScheduled = true;
-            }
-
-            if ( opScheduled )
-            {
-                GUI.DrawTexture( Inner( opLabel, 16f ), Widgets.CheckboxOnTex );
-            }
-            else
-            {
-                opLabelString.AppendLine( "FluffyMedical.NumCurrentOperations".Translate( "No" ) );
-            }
-
-            TooltipHandler.TipRegion( opLabel, opLabelString.ToString( ) );
-            Widgets.DrawHighlightIfMouseover( opLabel );
-            x += 50f;
-
-            // main window
-            Text.Anchor = TextAnchor.MiddleCenter;
-            var colWidth = ( rect.width - x ) / CapDefs.Count;
-            foreach ( PawnCapacityDef t in CapDefs ) {
-                var capDefCell = new Rect( x, y, colWidth, 30f );
-                var colorPair = HealthCardUtility.GetEfficiencyLabel( p, t );
-                var label = ( p.health.capacities.GetEfficiency( t ) * 100f ).ToString( "F0" ) + "%";
-                GUI.color = colorPair.Second;
-                Widgets.Label( capDefCell, label );
-                if ( Mouse.IsOver( capDefCell ) )
-                {
-                    GUI.DrawTexture( capDefCell, TexUI.HighlightTex );
-                }
-                Utility_Medical.DoHediffTooltip( capDefCell, p, t );
-                x += colWidth;
-            }
-        }
+        #endregion Methods
     }
 }

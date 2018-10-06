@@ -1,13 +1,42 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ModMetaData>
-	<name>Medical Tab</name>
-	<author>Fluffy</author>
-	<url></url>
-	<targetVersion>0.14.1220</targetVersion>
-	<description>
-Adds a comprehensive medical overview tab, showing your colonists' health at a glance.
-- Medical care designation
-- Schedule operations
-- Sort by everything
-	</description>
+  <name>Medical Tab</name>
+  <author>Fluffy</author>
+  <url/>
+  <targetVersion>0.19.2009</targetVersion>
+  <description>Adds a comprehensive medical overview tab, showing your colonists’ health at a glance. 
+
+&lt;size=24&gt;Important&lt;/size&gt;
+Does not require a new save game 
+Can safely be enabled/disabled in ongoing saves. 
+
+&lt;size=24&gt;Features&lt;/size&gt;
+Shows vital medical statistics for Colonists, Animals, Prisoners, Visitors and Hostiles*.
+Medical care designation, including mass and default assignments
+Overview of bleeding rates, pain and infection/disease/immunity progress
+See efficiency on all capabilities
+Schedule new operations and see planned operations
+Sort by everything 
+
+*: The hostile tab will by default only show downed hostiles, as I consider showing all hostiles cheating. There’s a toggle in the mod options to show all hostiles instead.
+
+&lt;size=24&gt;Powered by Harmony&lt;/size&gt;
+
+
+&lt;size=24&gt;Contributors&lt;/size&gt;
+
+Racoon:    German translation
+duduluu:    Chinese translation
+MossieuLeBlanc:    French translation
+kPherox:    A16 update
+Bronytamin:    
+WNJStudio:    Updated chinese translation
+Arex-rus:    Russian translation
+mora145:    
+Alex TD:    Tweaks to disease progress icon
+
+&lt;size=24&gt;Version&lt;/size&gt;
+This is version 1.18.56, for RimWorld 0.19.2009.
+
+</description>
 </ModMetaData>

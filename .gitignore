@@ -51,3 +51,7 @@ Temporary Items
 Source/BetterAnimalsTab/obj/Debug/BetterAnimalsTab.pdb
 *.cache
 *.pxd
+/Source/description.md
+/Source/ModConfig.json
+/.mailmap
+/Source/SteamConfig.vdf
