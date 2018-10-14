@@ -39,7 +39,7 @@ namespace Fluffy
                 for ( var i = 0; i < n; i++ )
                 {
                     diseaseRect.x += Constants.StatColumnMinWidth / ( n + 1 );
-                    DrawDiseaseIndicator( diseaseRect, diseases[i] );
+                    DrawDiseaseIndicator( diseaseRect, (CapacityUtility.DiseaseProgress) diseases[i] );
                 }
                 var tip = "";
                 foreach( var set in diseases.GroupBy( k => k.Part ) ){
@@ -81,7 +81,9 @@ namespace Fluffy
 
         public float GetValueToCompareTo( Pawn pawn )
         {
-            List<CapacityUtility.DiseaseProgress> diseases = pawn.GetDiseases().Cast<CapacityUtility.DiseaseProgress>().ToList();
+            List<CapacityUtility.DiseaseProgress> diseases = pawn.GetDiseases()
+                .Select( d => (CapacityUtility.DiseaseProgress) d )
+                .ToList();
             if ( !diseases.Any() )
                 return -1;
 

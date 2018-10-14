@@ -80,7 +80,7 @@
     <PostBuildEvent>release Fluffy_MedicalTab $(TargetDir)\..</PostBuildEvent> -->
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>node ../../postbuild update -x -n "Medical Tab"</PostBuildEvent>
+    <PostBuildEvent>mod update -x -n "Medical Tab"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

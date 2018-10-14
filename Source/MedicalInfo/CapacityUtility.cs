@@ -34,7 +34,7 @@ namespace Fluffy
 
             #region Methods
 
-            public static implicit operator DiseaseProgress(Hediff hediff)
+            public static explicit operator DiseaseProgress(Hediff hediff)
             {
                 var immunizable = hediff.TryGetComp<HediffComp_Immunizable>();
                 if (immunizable == null)
@@ -147,7 +147,7 @@ namespace Fluffy
 
                 if ( tags.Count == 0 )
                 {
-                    Log.Warning( $"Medical Tab :: Capacity {capacityDef.defName} does not have any bodyPartTags associated with it." );
+                    Log.Warning( $"Medical Tab :: Capacity {capacityDef.defName} does not have any bodyPartTags associated with it. This may be intentional." );
                 }
                 CapacityTags.Add(capacityDef, tags);
             }
@@ -167,7 +167,7 @@ namespace Fluffy
 
                 if ( !used )
                 {
-                    Log.Warning( $"Medical Tab :: Tag {tag.defName} is not associated with any pawnCapacity." );
+                    Log.Warning( $"Medical Tab :: Tag {tag.defName} is not associated with any pawnCapacity. This may be intentional." );
                 }
             }
         }
