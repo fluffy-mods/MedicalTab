@@ -38,7 +38,8 @@ namespace Fluffy
 
         public override void DoCell(Rect rect, Pawn pawn, PawnTable table)
         {
-            MedicalCareUtility.MedicalCareSetter(rect, ref pawn.playerSettings.medCare);
+            if ( pawn?.playerSettings?.medCare != null )
+                MedicalCareUtility.MedicalCareSetter(rect, ref pawn.playerSettings.medCare );
         }
 
         public void DoDefaultMedCareHeader(Rect rect)
