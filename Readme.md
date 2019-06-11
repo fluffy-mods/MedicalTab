@@ -23,6 +23,7 @@ Sort by everything
  - Racoon:	German translation
  - duduluu:	Chinese translation
  - MossieuLeBlanc:	French translation
+ - enescaglayan:         Turkish translation
  - kPherox:	A16 update
  - Bronytamin:	
  - WNJStudio:	Updated chinese translation
