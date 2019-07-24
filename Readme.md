@@ -23,7 +23,6 @@ Sort by everything
  - Racoon:	German translation
  - duduluu:	Chinese translation
  - MossieuLeBlanc:	French translation
- - enescaglayan:         Turkish translation
  - kPherox:	A16 update
  - Bronytamin:	
  - WNJStudio:	Updated chinese translation
@@ -34,6 +33,7 @@ Sort by everything
  - Seo. Junmin:	Korean translation
  - chrisi51:	German translation
  - Szymon Socha:	Polish translation
+ - enescaglayan:	Turkisch translation
 
 # Think you found a bug? 
 Please read [this guide](http://steamcommunity.com/sharedfiles/filedetails/?id=725234314) before creating a bug report,
@@ -53,5 +53,7 @@ Show your appreciation by buying me a coffee (or contribute towards a nice singl
 
 [![Buy Me a Coffee](http://i.imgur.com/EjWiUwx.gif)](https://ko-fi.com/fluffymods)
 
+[![I Have a Black Dog](https://i.ibb.co/ss59Rwy/New-Project-2.png)](https://www.youtube.com/watch?v=XiCrniLQGYc)
+
 # Version
-This is version 2.5.71, for RimWorld 1.0.2231.
+This is version 2.6.73, for RimWorld 1.0.2282.
