@@ -15,12 +15,15 @@ namespace Fluffy
         {
             get
             {
-                return MainTabWindow_Medical.Instance?.Table?.PawnsListForReading?.Max( p => p.playerSettings.medCare ) ?? MedicalCareCategory.Best;
+                return MainTabWindow_Medical.Instance?.Table?.PawnsListForReading?.Max( p => p.playerSettings?.medCare ) ?? MedicalCareCategory.Best;
             }
             set
             {
-                MainTabWindow_Medical.Instance.Table.PawnsListForReading.ForEach(
-                    p => p.playerSettings.medCare = value );
+                foreach ( var pawn in MainTabWindow_Medical.Instance.Table.PawnsListForReading )
+                {
+                    if ( pawn?.playerSettings?.medCare != null )
+                        pawn.playerSettings.medCare = value;
+                }
             }
         }
 
@@ -78,19 +81,16 @@ namespace Fluffy
             // decrease height of rect (base does this already, but MedCareSetter does not.
             rect.yMin = rect.yMax - Constants.DesiredHeaderHeight;
 
-            if ( Event.current.shift && Mouse.IsOver( rect ) && table.PawnsListForReading.Any() )
+            if ( ( Input.GetKey( KeyCode.LeftShift ) || Input.GetKey( KeyCode.RightShift ) ) && Mouse.IsOver( rect ) && table.PawnsListForReading.Any() )
             {
-                // mass assign
-                // note; weird as fuck sentinel/token approach, because somehow an intercepted click event and the medCareSetter do not fire in the same GUI phase?
-                var sentinel = OverallCare;
-                var token    = table.PawnsListForReading.Max( p => p.playerSettings.medCare );
-                MedicalCareUtility.MedicalCareSetter( rect, ref token );
-                if ( sentinel != token )
-                    OverallCare = token;
+                var current    = table.PawnsListForReading.Max( p => p.playerSettings.medCare );
+                MedicalCareUtility.MedicalCareSetter( rect, ref current );
+                if ( OverallCare != current )
+                    OverallCare = current;
 
                 TooltipHandler.TipRegion( rect, GetHeaderTip( table ) );
             }
-            else if ( Event.current.control && Mouse.IsOver( rect ) )
+            else if (( Input.GetKey( KeyCode.LeftControl ) || Input.GetKey( KeyCode.RightControl ) || Input.GetKey( KeyCode.LeftCommand ) || Input.GetKey( KeyCode.RightCommand ) ) && Mouse.IsOver( rect ) )
             {
                 // defaults
                 DoDefaultMedCareHeader( rect );
