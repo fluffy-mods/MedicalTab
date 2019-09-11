@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Manifest>
-  <version>2.9.83</version>
-  <manifestUri>https://cdn.jsdelivr.net/gh/FluffierThanThou/MedicalTab/About/Manifest.xml</manifestUri>
-  <downloadUri>https://github.com/FluffierThanThou/MedicalTab/releases/v2.9.83</downloadUri>
+  <version>2.10.84</version>
+  <manifestUri>https://cdn.jsdelivr.net/gh/fluffy-mods/MedicalTab/About/Manifest.xml</manifestUri>
+  <downloadUri>https://github.com/fluffy-mods/MedicalTab/releases/v2.10.84</downloadUri>
 </Manifest>
