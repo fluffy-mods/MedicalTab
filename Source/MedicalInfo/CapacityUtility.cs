@@ -334,6 +334,9 @@ namespace Fluffy
                 var immunizable = hediff.TryGetComp<HediffComp_Immunizable>();
                 var tendable = hediff.TryGetComp<HediffComp_TendDuration>();
 
+                Color.RGBToHSV( hediff.LabelColor, out float hue, out float saturation, out float value );
+                var color = Color.HSVToRGB( hue, 1f, 1f );
+
                 return new DiseaseProgress
                 {
                     label         = hediff.Label,
@@ -341,7 +344,7 @@ namespace Fluffy
                     severity      = hediff.Severity,
                     tended        = !hediff.TendableNow(),
                     tillTendTicks = tendable?.tendTicksLeft ?? 0,
-                    color         = hediff.LabelColor
+                    color         = color
                 };
             }
 
