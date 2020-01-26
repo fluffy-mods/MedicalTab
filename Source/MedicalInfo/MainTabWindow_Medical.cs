@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using DynamicPawnTable;
+using Harmony;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -66,7 +67,7 @@ namespace Fluffy
 
         public PawnTable Table
         {
-            get => _tableFieldInfo.GetValue( this ) as PawnTable;
+            get => _tableFieldInfo.GetValue( this ) as PawnTable_PlayerPawns;
             private set => _tableFieldInfo.SetValue( this, value );
         }
 
@@ -87,6 +88,7 @@ namespace Fluffy
             get
             {
                 IEnumerable<Pawn> pawns;
+
                 switch ( Source )
                 {
                     case SourceType.Colonists:
@@ -178,7 +180,7 @@ namespace Fluffy
         private void RebuildTable()
         {
             DynamicPawnTableDefOf.Medical.Select( c => ( c.Worker as OptionalColumn )?.ShowFor( Source ) ?? true );
-            Table = new PawnTable( DynamicPawnTableDefOf.Medical, () => Pawns, UI.screenWidth - (int) ( Margin * 2f ), ( int )( UI.screenHeight - 35 - ExtraBottomSpace - ExtraTopSpace - Margin * 2f )  );
+            Table = new PawnTable_PlayerPawns( DynamicPawnTableDefOf.Medical, () => Pawns, UI.screenWidth - (int) ( Margin * 2f ), ( int )( UI.screenHeight - 35 - ExtraBottomSpace - ExtraTopSpace - Margin * 2f )  );
         }
 
         #endregion Methods
