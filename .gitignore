@@ -12,6 +12,7 @@ $RECYCLE.BIN/
 
 **/bin
 **/obj
+**/packages
 **/.vs
 
 # Windows Installer files

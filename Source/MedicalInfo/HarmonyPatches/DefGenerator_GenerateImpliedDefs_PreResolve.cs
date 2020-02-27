@@ -3,14 +3,13 @@
 // 2017-05-16
 
 using DynamicPawnTable;
-using Harmony;
+using HarmonyLib;
 using RimWorld;
-using UnityEngine;
 using Verse;
 
 namespace Fluffy
 {
-    [HarmonyPatch(typeof(DefGenerator), "GenerateImpliedDefs_PreResolve")]
+    [HarmonyPatch(typeof(DefGenerator), nameof( DefGenerator.GenerateImpliedDefs_PreResolve ))]
     public class DefGenerator_GenerateImpliedDefs_PreResolve
     {
         #region Methods

@@ -3,8 +3,7 @@
 // 2017-05-16
 
 using System.Reflection;
-using Harmony;
-using RimWorld;
+using HarmonyLib;
 using UnityEngine;
 using Verse;
 
@@ -18,7 +17,7 @@ namespace Fluffy
         {
             // postfix implied def generation for capacity columns
             //HarmonyInstance.DEBUG = true;
-            HarmonyInstance harmony = HarmonyInstance.Create("fluffy.medicaltab");
+            var harmony = new Harmony("fluffy.medicaltab");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
 
             // get/create settings

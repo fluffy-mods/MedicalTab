@@ -73,7 +73,7 @@ namespace Fluffy
 
         protected override string GetTip(Pawn pawn)
         {
-            if (pawn.story.WorkTypeIsDisabled(WorkTypeDefOf.Doctor))
+            if (pawn.WorkTypeIsDisabled(WorkTypeDefOf.Doctor))
                 return
                     "MedicalTab.PawnIsIncapableOfX".Translate(pawn.LabelShort, WorkTypeDefOf.Doctor.gerundLabel)
                                                    .CapitalizeFirst();
@@ -94,7 +94,7 @@ namespace Fluffy
 
         protected override bool HasCheckbox(Pawn pawn)
         {
-            return !pawn.story.WorkTypeIsDisabled(WorkTypeDefOf.Doctor) &&
+            return !pawn.WorkTypeIsDisabled(WorkTypeDefOf.Doctor) &&
                    pawn.workSettings.WorkIsActive(WorkTypeDefOf.Doctor);
         }
 
