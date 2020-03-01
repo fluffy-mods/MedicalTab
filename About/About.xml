@@ -42,11 +42,11 @@ Jorge Martínez:    Spanish translations
 CrapoFR:    French translation
 
 &lt;size=24&gt;Version&lt;/size&gt;
-This is version 3.2.89, for RimWorld 1.1.2558.
+This is version 3.3.90, for RimWorld 1.1.2559.
 
 </description>
   <supportedVersions>
-    <li>1</li>
+    <li>1.1</li>
   </supportedVersions>
   <packageId>fluffy.medicaltab</packageId>
   <modDependencies>
