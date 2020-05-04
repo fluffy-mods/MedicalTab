@@ -2,7 +2,7 @@
 <ModMetaData>
   <name>Medical Tab</name>
   <author>Fluffy</author>
-  <url/>
+  <url>https://ludeon.com/forums/index.php?topic=16120</url>
   <description>Adds a comprehensive medical overview tab, showing your colonists’ health at a glance. 
 
 &lt;size=24&gt;Important&lt;/size&gt;
@@ -28,10 +28,8 @@ Racoon:    German translation
 duduluu:    Chinese translation
 MossieuLeBlanc:    French translation
 kPherox:    A16 update
-Bronytamin:    
 WNJStudio:    Updated chinese translation
 Arex-rus:    Russian translation
-mora145:    
 Alex TD:    Tweaks to disease progress icon
 Rodolfo Andrade:    Brazilian Portuguese translation
 Seo. Junmin:    Korean translation
@@ -42,7 +40,7 @@ Jorge Martínez:    Spanish translations
 CrapoFR:    French translation
 
 &lt;size=24&gt;Version&lt;/size&gt;
-This is version 3.3.90, for RimWorld 1.1.2559.
+This is version 3.3.90, for RimWorld 1.1.2618.
 
 </description>
   <supportedVersions>

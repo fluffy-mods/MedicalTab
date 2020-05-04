@@ -24,10 +24,8 @@ Sort by everything
  - duduluu:	Chinese translation
  - MossieuLeBlanc:	French translation
  - kPherox:	A16 update
- - Bronytamin:	
  - WNJStudio:	Updated chinese translation
  - Arex-rus:	Russian translation
- - mora145:	
  - Alex TD:	Tweaks to disease progress icon
  - Rodolfo Andrade:	Brazilian Portuguese translation
  - Seo. Junmin:	Korean translation
@@ -58,4 +56,4 @@ Show your appreciation by buying me a coffee (or contribute towards a nice singl
 [![I Have a Black Dog](https://i.ibb.co/ss59Rwy/New-Project-2.png)](https://www.youtube.com/watch?v=XiCrniLQGYc)
 
 # Version
-This is version 3.3.90, for RimWorld 1.1.2559.
+This is version 3.3.90, for RimWorld 1.1.2618.
