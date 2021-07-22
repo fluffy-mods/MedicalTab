@@ -1,0 +1,21 @@
+{
+    "name": "Medical Tab",
+    "sourceDir": ".",
+    "targetDir": "MedicalTab",
+    "url": "https://github.com/fluffy-mods/MedicalTab",
+    "version": {
+        "major": 4,
+        "minor": 0,
+        "build": 95
+    },
+    "author": {
+        "name": "Fluffy",
+        "url": "https://github.com/fluffy-mods/",
+        "email": "fluffy.l2032@gmail.com"
+    },
+    "git": {
+        "owner": "fluffy-mods",
+        "repo": "MedicalTab",
+        "url": "https://github.com/fluffy-mods/MedicalTab"
+    }
+}
