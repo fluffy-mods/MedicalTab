@@ -20,6 +20,15 @@
     },
     "changelog": [
         {
+            "date": "2021-07-22T17:06:20.000Z",
+            "message": "fix casing in hotkey, remove harmony dll",
+            "author": {
+                "name": "Fluffy",
+                "email": "fluffy.l2032@gmail.com"
+            },
+            "hash": "69dcbee15089d129bd1fe5d6da6531cca8b9d952"
+        },
+        {
             "date": "2021-07-22T08:21:45.000Z",
             "message": "release v4.1.98",
             "author": {
