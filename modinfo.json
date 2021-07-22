@@ -5,7 +5,7 @@
     "url": "https://github.com/fluffy-mods/MedicalTab",
     "version": {
         "major": 4,
-        "minor": 1,
+        "minor": 2,
         "build": 99
     },
     "author": {
@@ -19,6 +19,24 @@
         "url": "https://github.com/fluffy-mods/MedicalTab"
     },
     "changelog": [
+        {
+            "date": "2021-07-22T17:25:46.000Z",
+            "message": "m is not M, errors say",
+            "author": {
+                "name": "Fluffy",
+                "email": "fluffy.l2032@gmail.com"
+            },
+            "hash": "21f653f4d0ed4a80921e87bc7e04c2b496db8586"
+        },
+        {
+            "date": "2021-07-22T17:14:00.000Z",
+            "message": "release v4.1.99",
+            "author": {
+                "name": "Fluffy",
+                "email": "fluffy.l2032@gmail.com"
+            },
+            "hash": "6a3b61fd42c9914319185c92e64781c3f0d9b826"
+        },
         {
             "date": "2021-07-22T17:11:50.000Z",
             "message": "release v4.1.99",
