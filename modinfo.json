@@ -5,7 +5,7 @@
     "url": "https://github.com/fluffy-mods/MedicalTab",
     "version": {
         "major": 4,
-        "minor": 0,
+        "minor": 1,
         "build": 98
     },
     "author": {
@@ -19,6 +19,33 @@
         "url": "https://github.com/fluffy-mods/MedicalTab"
     },
     "changelog": [
+        {
+            "date": "2021-07-22T08:17:41.000Z",
+            "message": "add keybind (#44)",
+            "author": {
+                "name": "Fluffy",
+                "email": "fluffy.l2032@gmail.com"
+            },
+            "hash": "23953b6cf1536a2b291056b3c8f36f2ac2d6fbf3"
+        },
+        {
+            "date": "2021-07-22T08:17:14.000Z",
+            "message": "more squiglies",
+            "author": {
+                "name": "Fluffy",
+                "email": "fluffy.l2032@gmail.com"
+            },
+            "hash": "4d598536bdd93fdc5c8bbb0ff48ed8ddb8761e11"
+        },
+        {
+            "date": "2021-07-22T07:46:08.000Z",
+            "message": "remove red squiglies",
+            "author": {
+                "name": "Fluffy",
+                "email": "fluffy.l2032@gmail.com"
+            },
+            "hash": "da3d8c1ff09483587308c2bce90140e64171466a"
+        },
         {
             "date": "2021-07-22T07:14:21.000Z",
             "message": "add banner image template",
