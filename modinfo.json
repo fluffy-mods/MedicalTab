@@ -6,7 +6,7 @@
     "version": {
         "major": 4,
         "minor": 1,
-        "build": 98
+        "build": 99
     },
     "author": {
         "name": "Fluffy",
@@ -19,6 +19,15 @@
         "url": "https://github.com/fluffy-mods/MedicalTab"
     },
     "changelog": [
+        {
+            "date": "2021-07-22T08:21:45.000Z",
+            "message": "release v4.1.98",
+            "author": {
+                "name": "Fluffy",
+                "email": "fluffy.l2032@gmail.com"
+            },
+            "hash": "eb8a230c84d2d564124fea4107d7df1ccc436d59"
+        },
         {
             "date": "2021-07-22T08:17:41.000Z",
             "message": "add keybind (#44)",
