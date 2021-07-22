@@ -6,7 +6,7 @@
     "version": {
         "major": 4,
         "minor": 0,
-        "build": 95
+        "build": 98
     },
     "author": {
         "name": "Fluffy",
@@ -17,5 +17,16 @@
         "owner": "fluffy-mods",
         "repo": "MedicalTab",
         "url": "https://github.com/fluffy-mods/MedicalTab"
-    }
+    },
+    "changelog": [
+        {
+            "date": "2021-07-22T07:14:21.000Z",
+            "message": "add banner image template",
+            "author": {
+                "name": "Fluffy",
+                "email": "fluffy.l2032@gmail.com"
+            },
+            "hash": "fd409236e7e6f517c1cf6af6981b39d4cfa7575d"
+        }
+    ]
 }

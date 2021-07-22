@@ -1,6 +1,5 @@
-﻿// Karel Kroeze
-// PawnColumnWorker_SelfTend.cs
-// 2017-05-14
+﻿// Copyright Karel Kroeze, 2020-2021.
+// MedicalInfo/MedicalInfo/PawnColumnWorker_SelfTend.cs
 
 using System;
 using System.Reflection;
@@ -25,35 +24,49 @@ namespace Fluffy
         public static void DrawCellBackground(Rect cell, Pawn pawn)
         {
             if (_drawWorkBoxBackgroundMethodInfo == null)
+            {
                 _drawWorkBoxBackgroundMethodInfo = typeof(WidgetsWork).GetMethod("DrawWorkBoxBackground",
-                                                                                    BindingFlags.Static |
-                                                                                    BindingFlags.NonPublic);
-            if (_drawWorkBoxBackgroundMethodInfo == null)
-                throw new NullReferenceException("WidgetsWork.DrawWorkBoxBackground not found");
+                    BindingFlags.Static |
+                    BindingFlags.NonPublic);
+            }
 
-            _drawWorkBoxBackgroundMethodInfo.Invoke(null, new object[] { cell, pawn, WorkTypeDefOf.Doctor });
+            if (_drawWorkBoxBackgroundMethodInfo == null)
+            {
+                throw new NullReferenceException("WidgetsWork.DrawWorkBoxBackground not found");
+            }
+
+            _drawWorkBoxBackgroundMethodInfo.Invoke(null, new object[] {cell, pawn, WorkTypeDefOf.Doctor});
         }
 
         public override void DoCell(Rect rect, Pawn pawn, PawnTable table)
         {
             TooltipHandler.TipRegion(rect, GetTip(pawn));
             if (!HasCheckbox(pawn))
+            {
                 return;
+            }
 
-            Rect cell = new Rect(0f, 0f, Constants.IconSize, Constants.IconSize)
-                .CenteredOnXIn(rect)
-                .CenteredOnYIn(rect);
+            var cell = new Rect(0f, 0f, Constants.IconSize, Constants.IconSize)
+                      .CenteredOnXIn(rect)
+                      .CenteredOnYIn(rect);
             DrawCellBackground(cell, pawn);
 
             if (pawn.playerSettings.selfTend)
+            {
                 GUI.DrawTexture(cell, WidgetsWork.WorkBoxCheckTex);
+            }
+
             if (Widgets.ButtonInvisible(rect))
             {
-                SetValue(pawn, !GetValue(pawn));
+                SetValue(pawn, !GetValue(pawn), table);
                 if (GetValue(pawn))
+                {
                     SoundDefOf.Checkbox_TurnedOn.PlayOneShotOnCamera();
+                }
                 else
+                {
                     SoundDefOf.Checkbox_TurnedOff.PlayOneShotOnCamera();
+                }
             }
         }
 
@@ -66,7 +79,9 @@ namespace Fluffy
         public bool ShowFor(SourceType source)
         {
             if (source == SourceType.Colonists)
+            {
                 return true;
+            }
 
             return false;
         }
@@ -74,13 +89,18 @@ namespace Fluffy
         protected override string GetTip(Pawn pawn)
         {
             if (pawn.WorkTypeIsDisabled(WorkTypeDefOf.Doctor))
+            {
                 return
                     "MedicalTab.PawnIsIncapableOfX".Translate(pawn.LabelShort, WorkTypeDefOf.Doctor.gerundLabel)
                                                    .CapitalizeFirst();
+            }
+
             if (!pawn.workSettings.WorkIsActive(WorkTypeDefOf.Doctor))
+            {
                 return
                     "MedicalTab.PawnIsNotAX".Translate(pawn.LabelShort, WorkTypeDefOf.Doctor.pawnLabel)
                                             .CapitalizeFirst();
+            }
 
             return
                 "MedicalTab.ToggleSelfTend".Translate(GetValue(pawn) ? "Off".Translate() : "On".Translate())
@@ -98,7 +118,7 @@ namespace Fluffy
                    pawn.workSettings.WorkIsActive(WorkTypeDefOf.Doctor);
         }
 
-        protected override void SetValue(Pawn pawn, bool value)
+        protected override void SetValue(Pawn pawn, bool value, PawnTable table)
         {
             pawn.playerSettings.selfTend = value;
         }
