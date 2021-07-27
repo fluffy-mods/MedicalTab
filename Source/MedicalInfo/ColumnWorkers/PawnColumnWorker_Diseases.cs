@@ -14,91 +14,90 @@ namespace Fluffy
 {
     public class PawnColumnWorker_Diseases : PawnColumnWorker
     {
-        private static readonly MethodInfo _getTooltipMethodInfo;
 
-        static PawnColumnWorker_Diseases()
+        public override int Compare(Pawn a, Pawn b)
         {
-            _getTooltipMethodInfo =
-                typeof( HealthCardUtility ).GetMethod( "GetTooltip", BindingFlags.NonPublic | BindingFlags.Static );
-            if ( _getTooltipMethodInfo == null )
-                throw new MissingMethodException( "HealthCardUtility.GetTooltip not found" );
+            return GetValueToCompareTo(a).CompareTo(GetValueToCompareTo(b));
         }
 
-        public override int Compare( Pawn a, Pawn b )
-        {
-            return GetValueToCompareTo( a ).CompareTo( GetValueToCompareTo( b ) );
-        }
-
-        public override void DoCell( Rect rect, Pawn pawn, PawnTable table )
+        public override void DoCell(Rect rect, Pawn pawn, PawnTable table)
         {
             var diseases = pawn.GetPotentiallyLethalHediffs();
-            var diseaseRect = new Rect( rect.xMin - Constants.IconSize                   / 2f,
-                                        rect.yMin + ( rect.height - Constants.IconSize ) / 2f,
-                                        Constants.IconSize, Constants.IconSize );
+            var diseaseRect = new Rect(rect.xMin - Constants.IconSize / 2f,
+                                        rect.yMin + (rect.height - Constants.IconSize) / 2f,
+                                        Constants.IconSize, Constants.IconSize);
             var n = diseases.Count();
-            foreach ( var disease in diseases )
+            foreach (var disease in diseases)
             {
-                diseaseRect.x += Constants.StatColumnMinWidth / ( n + 1 );
-                DrawDiseaseIndicator( diseaseRect, (CapacityUtility.DiseaseProgress) disease );
+                diseaseRect.x += Constants.StatColumnMinWidth / (n + 1);
+                DrawDiseaseIndicator(diseaseRect, (CapacityUtility.DiseaseProgress)disease);
             }
 
-            TooltipHandler.TipRegion( rect, () => GetTooltip( pawn, diseases ), pawn.GetHashCode() );
+            TooltipHandler.TipRegion(rect, () => GetTooltip(pawn, diseases), pawn.GetHashCode());
         }
 
-        private string GetTooltip( Pawn pawn, IEnumerable<Hediff> diseases )
+        private string GetTooltip(Pawn pawn, IEnumerable<Hediff> diseases)
         {
             var tip = "";
-            foreach ( var set in diseases.GroupBy( k => k.Part ) )
-                tip += GetDiseaseTooltip( pawn, set, set.Key ) + "\n\n";
+            foreach (var set in diseases.GroupBy(k => k.Part))
+                tip += GetDiseaseTooltip(pawn, set, set.Key) + "\n\n";
             return tip;
         }
 
-        public override void DoHeader( Rect rect, PawnTable table )
+        public override void DoHeader(Rect rect, PawnTable table)
         {
-            def.headerIconSize = new Vector2( Constants.HeaderIconSize, Constants.HeaderIconSize );
-            base.DoHeader( rect, table );
+            def.headerIconSize = new Vector2(Constants.HeaderIconSize, Constants.HeaderIconSize);
+            base.DoHeader(rect, table);
         }
 
-        public void DrawDiseaseIndicator( Rect rect, CapacityUtility.DiseaseProgress disease )
+        public void DrawDiseaseIndicator(Rect rect, CapacityUtility.DiseaseProgress disease)
         {
             // draw immunity
-            if ( disease.immunity > 0 )
+            if (disease.immunity > 0)
             {
-                var immunityRect = rect.ContractedBy( Mathf.Lerp( rect.width / 2f, 0f, disease.immunity ) );
-                GUI.color = new Color( 1f, 1f, 1f, Mathf.Lerp( .5f, 1f, disease.immunity ) );
-                GUI.DrawTexture( immunityRect, Resources.Circle );
+                var immunityRect = rect.ContractedBy(Mathf.Lerp(rect.width / 2f, 0f, disease.immunity));
+                GUI.color = new Color(1f, 1f, 1f, Mathf.Lerp(.5f, 1f, disease.immunity));
+                GUI.DrawTexture(immunityRect, Resources.Circle);
             }
 
             // draw disease progress
-            var diseaseProgressRect = rect.ContractedBy( Mathf.Lerp( rect.width / 2f, 0f, disease.severity ) );
+            var diseaseProgressRect = rect.ContractedBy(Mathf.Lerp(rect.width / 2f, 0f, disease.severity));
             GUI.color = disease.color;
-            GUI.DrawTexture( diseaseProgressRect, Resources.Circle );
+            GUI.DrawTexture(diseaseProgressRect, Resources.Circle);
             GUI.color = Color.white;
 
             // draw indicator
             GUI.color = disease.tended ? Color.white : Color.gray;
-            GUI.DrawTexture( rect, Resources.DashCircle );
+            GUI.DrawTexture(rect, Resources.DashCircle);
         }
 
-        public string GetDiseaseTooltip( Pawn pawn, IEnumerable<Hediff> diffs, BodyPartRecord part )
+        public string GetDiseaseTooltip(Pawn pawn, IEnumerable<Hediff> diffs, BodyPartRecord part)
         {
-            return _getTooltipMethodInfo.Invoke( null, new object[] {diffs, pawn, part} ) as string;
+            var tips = diffs.Select(diff => diff.GetTooltip(pawn, false));
+            if (part != null)
+            {
+                return $"{part.LabelCap}:\n{string.Join("\n", tips)}";
+            }
+            else
+            {
+                return string.Join("\n", tips);
+            }
         }
 
-        public override int GetMinWidth( PawnTable table )
+        public override int GetMinWidth(PawnTable table)
         {
             return Constants.StatColumnMinWidth;
         }
 
-        public float GetValueToCompareTo( Pawn pawn )
+        public float GetValueToCompareTo(Pawn pawn)
         {
             var diseases = pawn.GetDiseases()
-                               .Select( d => (CapacityUtility.DiseaseProgress) d )
+                               .Select(d => (CapacityUtility.DiseaseProgress)d)
                                .ToList();
-            if ( !diseases.Any() )
+            if (!diseases.Any())
                 return -1;
 
-            return diseases.Max( d => d.severity - d.immunity );
+            return diseases.Max(d => d.severity - d.immunity);
         }
     }
 }

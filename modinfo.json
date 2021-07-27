@@ -6,7 +6,7 @@
     "version": {
         "major": 4,
         "minor": 2,
-        "build": 101
+        "build": 105
     },
     "author": {
         "name": "Fluffy",
@@ -19,6 +19,15 @@
         "url": "https://github.com/fluffy-mods/MedicalTab"
     },
     "changelog": [
+        {
+            "date": "2021-07-27T22:25:10.000Z",
+            "message": "fully move to sdk project, update refs",
+            "author": {
+                "name": "Fluffy",
+                "email": "fluffy.l2032@gmail.com"
+            },
+            "hash": "e614724510822a19b3b2c21aff0fee7f89398855"
+        },
         {
             "date": "2021-07-22T17:26:18.000Z",
             "message": "release v4.2.99",
