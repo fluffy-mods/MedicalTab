@@ -6,7 +6,7 @@
     "version": {
         "major": 4,
         "minor": 2,
-        "build": 99
+        "build": 101
     },
     "author": {
         "name": "Fluffy",
@@ -19,6 +19,15 @@
         "url": "https://github.com/fluffy-mods/MedicalTab"
     },
     "changelog": [
+        {
+            "date": "2021-07-22T17:26:18.000Z",
+            "message": "release v4.2.99",
+            "author": {
+                "name": "Fluffy",
+                "email": "fluffy.l2032@gmail.com"
+            },
+            "hash": "40be6b139b87d3edde75d25f8e2078120969513a"
+        },
         {
             "date": "2021-07-22T17:25:46.000Z",
             "message": "m is not M, errors say",
@@ -127,5 +136,207 @@
             },
             "hash": "fd409236e7e6f517c1cf6af6981b39d4cfa7575d"
         }
-    ]
+    ],
+    "contributions": [
+        {
+            "hash": "c5f23ef98074438a7cf77e3313888ba19ffa20aa",
+            "author": "CrapoFR",
+            "description": "French translation (#40)"
+        },
+        {
+            "hash": "cc85a6237ed7e133fd347f9e739791eb6cb66b74",
+            "author": "Jorge Martínez",
+            "description": "Added Latin American Spanish translation (#37)"
+        },
+        {
+            "hash": "fec82cc804169245b5b1d9662c134a7995316b9a",
+            "author": "enescaglayan",
+            "description": "Added Turkish translation (#34)"
+        },
+        {
+            "hash": "befa2b1cb45451aa30d5dad4585fbd1fac4eae8f",
+            "author": "Szymon Socha",
+            "description": "Polish translation (#33)"
+        },
+        {
+            "hash": "7fa5876a16aed6e68cb66722c7f4233fd4e4cabb",
+            "author": "chrisi51",
+            "description": "German Translation (#30)"
+        },
+        {
+            "hash": "43396d74f48e4d4da11899d98c61e9de2e67e1dc",
+            "author": "Seo. Junmin",
+            "description": "Add Korean translation (#29)"
+        },
+        {
+            "hash": "d3fd1b3bb6da372e9a8364a73d2b6ab0e67e5195",
+            "author": "Rodolfo Andrade",
+            "description": "Brazilian Portuguese translation (#25)"
+        },
+        {
+            "hash": "46ee9989c69036c82cbcf31a6131d1eb28d911dc",
+            "author": "Alex TD",
+            "description": "Show \"Needs Tending\" for diseases (#24)"
+        },
+        {
+            "hash": "ecf5e157e60a2daf75b1e79e661ef8ba087f7c82",
+            "author": "mora145",
+            "description": "Spanish translation (#23)"
+        },
+        {
+            "hash": "d3fdaa187a485fd52f58c8b343e6d9df5dd27416",
+            "author": "Arex-rus",
+            "description": "Add Russian translation (#21)"
+        },
+        {
+            "hash": "cef9858a426604c8a22f068e3a23c2111d880511",
+            "author": "duduluu",
+            "description": "Fix column header internationalization (#17)"
+        },
+        {
+            "hash": "d408c414225c5b334046326a983375d4b42e100b",
+            "author": "duduluu",
+            "description": "Patch PawnColumnDef_Capacity and Update Chinese translations (#16)"
+        },
+        {
+            "hash": "cc7ad97a5c26e5f0c192b5747987cf39261587da",
+            "author": "WNJStudio",
+            "description": "updated chinese simplified translation"
+        },
+        {
+            "hash": "b3bf9f8423f9208e0aebe658080fdc09720be693",
+            "author": "Bronytamin",
+            "description": "add russian translation"
+        },
+        {
+            "hash": "2d18e9353649961831e1474f6a9900f210746a1c",
+            "author": "kPherox",
+            "description": "add translation japanese and fix error (#8)"
+        },
+        {
+            "hash": "78a4adce2ded1d38f9565d883c235215bac20581",
+            "author": "duduluu",
+            "description": "Add Chinese Translation (#4)"
+        },
+        {
+            "hash": "4a36c6ea094736f66b19c7011fbbf745f2d5eeb8",
+            "author": "kPherox",
+            "description": "Initial update for A16 (#6)"
+        }
+    ],
+    "contributors": {
+        "CrapoFR": [
+            {
+                "hash": "c5f23ef",
+                "author": "CrapoFR",
+                "description": "French translation (#40)"
+            }
+        ],
+        "Jorge Martínez": [
+            {
+                "hash": "cc85a62",
+                "author": "Jorge Martínez",
+                "description": "Added Latin American Spanish translation (#37)"
+            }
+        ],
+        "enescaglayan": [
+            {
+                "hash": "fec82cc",
+                "author": "enescaglayan",
+                "description": "Added Turkish translation (#34)"
+            }
+        ],
+        "Szymon Socha": [
+            {
+                "hash": "befa2b1",
+                "author": "Szymon Socha",
+                "description": "Polish translation (#33)"
+            }
+        ],
+        "chrisi51": [
+            {
+                "hash": "7fa5876",
+                "author": "chrisi51",
+                "description": "German Translation (#30)"
+            }
+        ],
+        "Seo. Junmin": [
+            {
+                "hash": "43396d7",
+                "author": "Seo. Junmin",
+                "description": "Add Korean translation (#29)"
+            }
+        ],
+        "Rodolfo Andrade": [
+            {
+                "hash": "d3fd1b3",
+                "author": "Rodolfo Andrade",
+                "description": "Brazilian Portuguese translation (#25)"
+            }
+        ],
+        "Alex TD": [
+            {
+                "hash": "46ee998",
+                "author": "Alex TD",
+                "description": "Show \"Needs Tending\" for diseases (#24)"
+            }
+        ],
+        "mora145": [
+            {
+                "hash": "ecf5e15",
+                "author": "mora145",
+                "description": "Spanish translation (#23)"
+            }
+        ],
+        "Arex-rus": [
+            {
+                "hash": "d3fdaa1",
+                "author": "Arex-rus",
+                "description": "Add Russian translation (#21)"
+            }
+        ],
+        "duduluu": [
+            {
+                "hash": "cef9858",
+                "author": "duduluu",
+                "description": "Fix column header internationalization (#17)"
+            },
+            {
+                "hash": "d408c41",
+                "author": "duduluu",
+                "description": "Patch PawnColumnDef_Capacity and Update Chinese translations (#16)"
+            },
+            {
+                "hash": "78a4adc",
+                "author": "duduluu",
+                "description": "Add Chinese Translation (#4)"
+            }
+        ],
+        "WNJStudio": [
+            {
+                "hash": "cc7ad97",
+                "author": "WNJStudio",
+                "description": "updated chinese simplified translation"
+            }
+        ],
+        "Bronytamin": [
+            {
+                "hash": "b3bf9f8",
+                "author": "Bronytamin",
+                "description": "add russian translation"
+            }
+        ],
+        "kPherox": [
+            {
+                "hash": "2d18e93",
+                "author": "kPherox",
+                "description": "add translation japanese and fix error (#8)"
+            },
+            {
+                "hash": "4a36c6e",
+                "author": "kPherox",
+                "description": "Initial update for A16 (#6)"
+            }
+        ]
+    }
 }
