@@ -5,7 +5,7 @@
     "url": "https://github.com/fluffy-mods/MedicalTab",
     "version": {
         "major": 4,
-        "minor": 2,
+        "minor": 3,
         "build": 105
     },
     "author": {
@@ -19,6 +19,15 @@
         "url": "https://github.com/fluffy-mods/MedicalTab"
     },
     "changelog": [
+        {
+            "date": "2021-07-27T22:47:08.000Z",
+            "message": "fix disease tooltips (hopefully)",
+            "author": {
+                "name": "Fluffy",
+                "email": "fluffy.l2032@gmail.com"
+            },
+            "hash": "fa04cfca0d072dc9212574b2c6dba73845ad0939"
+        },
         {
             "date": "2021-07-27T22:25:10.000Z",
             "message": "fully move to sdk project, update refs",
