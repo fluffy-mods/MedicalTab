@@ -1,15 +1,12 @@
-﻿// Karel Kroeze
+// Karel Kroeze
 // PawnColumnDef_Capacity.cs
 // 2017-05-16
 
 using RimWorld;
-using UnityEngine;
 using Verse;
 
-namespace Fluffy
-{
-    public class PawnColumnDef_Capacity : PawnColumnDef
-    {
+namespace Fluffy {
+    public class PawnColumnDef_Capacity: PawnColumnDef {
         #region Fields
 
         public PawnCapacityDef capacity;

@@ -1,4 +1,4 @@
-﻿//// duduluu
+//// duduluu
 //// MainTabWindow_Medical.cs
 //// 2017-06-22
 //

@@ -1,15 +1,13 @@
-﻿// Karel Kroeze
+// Karel Kroeze
 // PawnTableDefOf.cs
 // 2017-05-14
 
 using DynamicPawnTable;
 using RimWorld;
 
-namespace Fluffy
-{
+namespace Fluffy {
     [DefOf]
-    public class DynamicPawnTableDefOf
-    {
+    public class DynamicPawnTableDefOf {
         #region Fields
 
         public static DynamicPawnTableDef Medical;

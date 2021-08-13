@@ -1,15 +1,9 @@
-﻿// Karel Kroeze
+// Karel Kroeze
 // Constants.cs
 // 2017-05-14
 
-using RimWorld;
-using UnityEngine;
-using Verse;
-
-namespace Fluffy
-{
-    public static class Constants
-    {
+namespace Fluffy {
+    public static class Constants {
         #region Fields
 
         public const float AlternatingHeaderLabelOffset = 20f;

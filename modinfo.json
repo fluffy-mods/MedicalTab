@@ -6,7 +6,7 @@
     "version": {
         "major": 4,
         "minor": 3,
-        "build": 105
+        "build": 110
     },
     "author": {
         "name": "Fluffy",
@@ -356,5 +356,14 @@
                 "description": "Initial update for A16 (#6)"
             }
         ]
-    }
+    },
+    "dependencies": [
+        {
+            "type": "required",
+            "id": "brrainz.harmony",
+            "name": "Harmony",
+            "steamId": 2009463077,
+            "download": "https://github.com/pardeike/HarmonyRimWorld/releases/latest"
+        }
+    ]
 }
