@@ -5,7 +5,7 @@
     "url": "https://github.com/fluffy-mods/MedicalTab",
     "version": {
         "major": 4,
-        "minor": 3,
+        "minor": 4,
         "build": 110
     },
     "author": {
@@ -19,6 +19,15 @@
         "url": "https://github.com/fluffy-mods/MedicalTab"
     },
     "changelog": [
+        {
+            "date": "2021-08-13T21:29:56.000Z",
+            "message": "remove obsolete files, use unique defName for medical care column",
+            "author": {
+                "name": "Fluffy",
+                "email": "fluffy.l2032@gmail.com"
+            },
+            "hash": "37f509b7aebfc6c5e9829e11650bddbfaf8b6c95"
+        },
         {
             "date": "2021-07-27T22:47:08.000Z",
             "message": "fix disease tooltips (hopefully)",

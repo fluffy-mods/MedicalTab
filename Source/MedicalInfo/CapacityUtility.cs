@@ -178,7 +178,7 @@ namespace Fluffy {
 
             foreach (BodyPartRecord part in parts) {
                 float current = PawnCapacityUtility.CalculatePartEfficiency( pawn.health.hediffSet, part );
-                if (after < current == negative) {
+                if ((after < current) == negative) {
                     options.Add(GenerateSurgeryOption(pawn, pawn, r,
                                                         r.PotentiallyMissingIngredients(null, pawn.Map),
                                                         part));
@@ -275,7 +275,7 @@ namespace Fluffy {
                 foreach (PawnCapacityModifier capMod in stage.capMods) {
                     if (capMod.capacity == capacity) {
                         float after = Mathf.Min( ( current + capMod.offset ) * capMod.postFactor, capMod.setMax );
-                        return after < current == negative;
+                        return (after < current) == negative;
                     }
                 }
             }
