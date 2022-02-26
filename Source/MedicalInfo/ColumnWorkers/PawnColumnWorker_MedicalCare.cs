@@ -8,7 +8,7 @@ using UnityEngine;
 using Verse;
 
 namespace Fluffy {
-    public class PawnColumnWorker_MedicalCare: PawnColumnWorker, OptionalColumn {
+    public class PawnColumnWorker_MedicalCare: PawnColumnWorker, IOptionalColumn {
         public MedicalCareCategory OverallCare {
             get => MainTabWindow_Medical.Instance?.Table?.PawnsListForReading?.Max(p => p.playerSettings?.medCare) ?? MedicalCareCategory.Best;
             set {

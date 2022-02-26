@@ -9,7 +9,7 @@ using Verse;
 using Verse.Sound;
 
 namespace Fluffy {
-    public class PawnColumnWorker_SelfTend: PawnColumnWorker_Checkbox, OptionalColumn {
+    public class PawnColumnWorker_SelfTend: PawnColumnWorker_Checkbox, IOptionalColumn {
         #region Fields
 
         // todo; override the horrible vanilla checkboxes

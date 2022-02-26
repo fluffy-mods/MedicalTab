@@ -200,7 +200,7 @@ namespace Fluffy {
 
             return bill.recipe.AddsHediffThatAffects(capacity, -1) ||
                    bill.recipe.AdministersDrugThatAffects(capacity, -1) ||
-                   bill.recipe.addsHediff.IsAddedPart() && bill.Part.Affects(capacity);
+                   (bill.recipe.addsHediff.IsAddedPart() && bill.Part.Affects(capacity));
         }
 
         public static bool AddsHediffThatReducesPain(this RecipeDef r) {

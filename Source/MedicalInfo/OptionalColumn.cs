@@ -3,7 +3,7 @@
 // 2017-05-18
 
 namespace Fluffy {
-    public interface OptionalColumn {
+    public interface IOptionalColumn {
         #region Methods
 
         bool ShowFor(SourceType source);

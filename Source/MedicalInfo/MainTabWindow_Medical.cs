@@ -165,7 +165,7 @@ namespace Fluffy {
         }
 
         private void RebuildTable() {
-            DynamicPawnTableDefOf.Medical.Select(c => (c.Worker as OptionalColumn)?.ShowFor(Source) ?? true);
+            DynamicPawnTableDefOf.Medical.Select(c => (c.Worker as IOptionalColumn)?.ShowFor(Source) ?? true);
             Table = new PawnTable_PlayerPawns(DynamicPawnTableDefOf.Medical, () => Pawns, UI.screenWidth - (int) (Margin * 2f), (int) (UI.screenHeight - 35 - ExtraBottomSpace - ExtraTopSpace - (Margin * 2f)));
         }
 
