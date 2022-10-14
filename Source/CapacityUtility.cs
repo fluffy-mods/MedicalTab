@@ -237,8 +237,7 @@ namespace Fluffy {
         }
 
         public static FloatMenuOption GenerateSurgeryOption(Pawn pawn, Thing thingForMedBills, RecipeDef recipe,
-                                                             IEnumerable<ThingDef> missingIngredients,
-                                                             BodyPartRecord part = null) {
+                                                             IEnumerable<ThingDef> missingIngredients, BodyPartRecord part = null) {
             if (_generateSurgeryOptionMethodInfo == null) {
                 _generateSurgeryOptionMethodInfo = typeof(HealthCardUtility).GetMethod("GenerateSurgeryOption",
                                                                                           BindingFlags.NonPublic |
@@ -248,13 +247,14 @@ namespace Fluffy {
                 }
             }
 
-            return
-                _generateSurgeryOptionMethodInfo.Invoke(null,
+            var option = _generateSurgeryOptionMethodInfo.Invoke(null,
                                                          new object[]
                                                          {
-                                                             pawn, thingForMedBills, recipe, missingIngredients, part
+                                                             pawn, thingForMedBills, recipe, missingIngredients, AcceptanceReport.WasAccepted, 0, part
                                                          })
                     as FloatMenuOption;
+            option.mouseoverGuiAction = null;
+            return option;
         }
 
         public static bool IsAddedPart(this HediffDef hediff) {

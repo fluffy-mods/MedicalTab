@@ -5,14 +5,14 @@
         <AssemblyTitle>MedicalTab</AssemblyTitle>
         <Product>MedicalTab</Product>
         <Copyright>Copyright © 2015-2021</Copyright>
-        <OutputPath>..\..\Assemblies\</OutputPath>
+        <OutputPath>..\Assemblies\</OutputPath>
         <DebugType>portable</DebugType>
         <PostBuildEvent>mod update</PostBuildEvent>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\..\..\TOOLS\DynamicPawnTable\DynamicPawnTable\DynamicPawnTable.csproj" />
-        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.3.3087" />
+        <ProjectReference Include="..\..\..\TOOLS\DynamicPawnTable\DynamicPawnTable\DynamicPawnTable.csproj" />
+        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.4.3517-beta" />
         <PackageReference Include="Lib.Harmony" Version="2.1.1" ExcludeAssets="runtime" />
     </ItemGroup>
 </Project>
